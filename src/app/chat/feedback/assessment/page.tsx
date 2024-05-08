@@ -133,7 +133,7 @@ function AssessmentPage() {
 
 export default AssessmentPage
 
-export function LikertScale({question, index}: {question: string, index: number}) {
+function LikertScale({question, index}: {question: string, index: number}) {
     return (
         <div className="flex flex-col my-8">
             <label className="mb-4 text-xl">{question}</label>
