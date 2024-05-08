@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38">
+  <g>
+    <g>
+      <g>
+        <line x1="13.4249" y1="7.7157" x2="37" y2="7.7157" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+        <line x1="1" y1="7.7157" x2="8.7022" y2="7.7157" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+        <path d="M64.78,38.8069V64.0912a4,4,0,0,1-4,4H39.4952a4,4,0,0,1-4-4V38.8069" transform="translate(-31.0804 -31.0912)" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+      </g>
+      <g>
+        <line x1="26.4044" y1="15.1506" x2="26.4044" y2="29.5653" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+        <line x1="11.7098" y1="15.1506" x2="11.7098" y2="29.5653" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+        <line x1="19.0745" y1="15.1506" x2="19.0745" y2="29.5653" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+      </g>
+    </g>
+    <path d="M19,1h0a5.5751,5.5751,0,0,1,5.5751,5.5751V7.7157a0,0,0,0,1,0,0h-11.15a0,0,0,0,1,0,0V6.5751A5.5751,5.5751,0,0,1,19,1Z" style="fill: none;stroke: #2c3149;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2px"/>
+  </g>
+</svg>

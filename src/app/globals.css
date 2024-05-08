@@ -1,29 +1,25 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --foreground-rgb: 23, 23, 23;
+  --background-start-rgb: 247, 247, 255;
   --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: rgb(var(--background-start-rgb));
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
 }
 
 @layer utilities {
@@ -31,3 +27,129 @@ body {
     text-wrap: balance;
   }
 }
+
+
+.bgspin {
+  animation: spin 120s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.circle1 {
+  background: rgb(246, 145, 4);
+  filter: blur(150px);
+  -webkit-filter: blur(150px);
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.circle2 {
+  background: rgb(117, 2, 240);
+  filter: blur(150px);
+  -webkit-filter: blur(150px);
+  opacity: 0.5;
+  z-index: -1;
+}
+
+input {
+  outline-color: rgba(27, 161, 85, 0.473);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+
+.hide {
+  transform: translateX(-100%);
+}
+
+.btn {
+  cursor: pointer;
+  transition: all 0.7s ease;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.btn:hover {
+  border-color: rgba(27, 161, 85, 0.473);
+  scale: 1.05;
+}
+
+.btn:active {
+  scale: 0.1;
+}
+
+.chatContainer {
+  height: 600px;
+  mask: linear-gradient(0deg, transparent, white 10%, white 80%, transparent);
+  -webkit-mask: linear-gradient(0deg,
+      transparent,
+      white 10%,
+      white 90%,
+      transparent,
+    );
+}
+
+/* Settings Toggle Switcher */
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: #ccc;
+  border-radius: 16px;
+  width: 29px;
+  height: 16px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+
+.toggle-switch:before,
+.toggle-switch:after {
+  content: "";
+}
+
+.toggle-switch:before {
+  display: block;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.25s;
+}
+
+.toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-checkbox:checked+.toggle-switch:before {
+  left: 15px;
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+/* END: Settings Toggle Switcher */
