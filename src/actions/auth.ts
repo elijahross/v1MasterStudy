@@ -29,16 +29,19 @@ export async function login(formData: FormData) {
     const data = await client.execute(`SELECT * FROM Users WHERE email = '${checkUser.email}'`);
     const passwordMatch = await compare(checkUser.password as string, data.rows[0]?.password as string).catch(e => { throw new Error(e.message) });
     if (passwordMatch) {
+        // Create the session
         const user = { userId: data.rows[0]?.userId || null, role: data.rows[0]?.role || null, name: data.rows[0]?.name || null, email: data.rows[0]?.email || null } as User;
         if (data.rows[0]?.verified === 'false') {
-            await sendVerification(user?.email as string, user.name as string, user.userId as string).then(() => { throw new Error("User not verified!") });
-        }
-        // Create the session
+            await sendVerification(user?.email as string, user.name as string, user.userId as string);
+            return {status: "101", message: "Please verify your email to continue"};
+        } else {
         const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
         const session = await encrypt({ user, expires });
         cookies().set("session", session, { expires, httpOnly: true });
+        return {status: "200", message: "Logged in successfully"};
+    }
     } else {
-        throw new Error("Invalid Credentials");
+        return {status: "401", message: "Invalid credentials!"};
     }
 }
 
@@ -62,14 +65,14 @@ export async function signUp(formData: FormData) {
     const password = await hash(rawpassword, 10);
     const verified = await client.execute(`SELECT * FROM Users WHERE email = '${email}'`);
     if (verified.rows[0]?.email === email) {
-        throw new Error("User already exists!");
+        return {status: "401", message: "User already exists!"};
     } else {
         // Insert into the Database
-        const data = await client.execute(`INSERT INTO Users (userId, role, name, email, password, date, verified) VALUES ('${userId}', '${role}', '${name}', '${email}', '${password}', '${date}', 'false');`).then(() => sendVerification(email, name, userId)).catch(e => { throw new Error("Could not set connect to the Database. Please try again later.") });
-        const setSession = await client.execute(`INSERT INTO Sessions (userId, sessionsLeft) VALUES ('${userId}', '3')`).catch(e => { throw new Error("Could not set restriction for the user. Please try again later.") });
+        const data = await client.execute(`INSERT INTO Users (userId, role, name, email, password, date, verified) VALUES ('${userId}', '${role}', '${name}', '${email}', '${password}', '${date}', 'false');`).then(() => sendVerification(email, name, userId)).catch(e => { return {status: "500", message: "Could not connect to the database. Please try again later."}});
+        const setSession = await client.execute(`INSERT INTO Session (userId, sessionsLeft) VALUES ('${userId}', 3)`).catch(e => { return {status: "500", message: "Could not set user restriction. Please try again later."}});
+        return {status: "200", message: "User created successfully. Please verify your email to continue."};
     }
 }
-
 
 export async function verifyUser(formData: FormData) {
     "use server"
@@ -77,14 +80,14 @@ export async function verifyUser(formData: FormData) {
     try {
         const data = await client.execute(`SELECT * FROM Users WHERE userId = '${userId}'`);
         if (data.rows[0]?.userId !== userId) {
-            throw new Error("The code is incorrect, try again!");
+            return {status: "401", message: "Invalid verification code!"};
         } else {
             const update = await client.execute(`UPDATE Users SET verified = 'true' WHERE userId = '${userId}'`);
             const user = { userId: data.rows[0]?.userId || null, role: data.rows[0]?.role || null, name: data.rows[0]?.name || null, email: data.rows[0]?.email || null } as User;
             const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
             const session = await encrypt({ user, expires });
             cookies().set("session", session, { expires, httpOnly: true });
-            return user;
+            return {status: "200", message: "User verified successfully!"};
         }
-    } catch (e: any) { throw new Error(e) }
+    } catch (e: any) {return {status: "500", message: "Could not connect to the database. Please try again later."}}
 }

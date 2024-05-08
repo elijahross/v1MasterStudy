@@ -43,7 +43,8 @@ export async function setAssessmentValues(formData: FormData) {
         qa25: formData.get('qa25')
     }
     const data = await client.execute(`UPDATE Account SET qa1='${fd.qa1}', qa2='${fd.qa2}', qa3='${fd.qa3}', qa4='${fd.qa4}', qa5='${fd.qa5}', qa6='${fd.qa6}', qa7='${fd.qa7}', qa8='${fd.qa8}', qa9='${fd.qa9}', qa10='${fd.qa10}', qa11='${fd.qa11}', qa12='${fd.qa12}', qa13='${fd.qa13}', qa14='${fd.qa14}', qa15='${fd.qa15}', qa16='${fd.qa16}', qa17='${fd.qa17}', qa18='${fd.qa18}', qa19='${fd.qa19}', qa20='${fd.qa20}', qa21='${fd.qa21}', qa22='${fd.qa22}', qa23='${fd.qa23}', qa24='${fd.qa24}', qa25='${fd.qa25}' WHERE userId='${userId}'`
-    ).then(() => setNewConnectionsLeft(0)).catch((error)=> {throw new Error("Could not reach the database, try again later")});
+    ).then(() => setNewConnectionsLeft(0)).catch((error)=> {return {status: "500", message: "Could not connect to the database. Please try again later."}});
+    return {status: "200", message: "Assessment values updated successfully."}
 }
 
 

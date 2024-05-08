@@ -1,25 +1,6 @@
-"use client"
-import Image from "next/image";
-import { getSession } from "@/actions/session";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import AuthWrapper from "@/components/AuthWrapper";
 
 export default function Authorization() {
-  const router = useRouter();
-  const [toggle, setToggle] = useState(false);
-  const [session, setSession] = useState({} as any);
-  useEffect(() => {
-    getSession().then((session) => setSession(session));
-  }, [toggle]);
-
-  function handleClick(destination: boolean) {
-    if(session.user) {
-      router.push("/chat")
-    } else {
-
-    }
-  }
   return (
     <div className=" relative flex min-h-screen flex-col items-center justify-between w-full sm:p-10 p-4">
       <div className="flex flex-col items-center justify-center max-w-xl mb-10 m-auto">

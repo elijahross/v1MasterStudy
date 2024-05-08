@@ -19,7 +19,15 @@ function LogIn() {
     return (
         <div className="items-center flex-center h-fit max-w-md px-8 py-6 w-full  ">
             <form action={async (formData) => {
-                await login(formData).then(() => router.push("/chat")).catch((err) => {if (err.message === "User not verified!") {router.push("/verification")}; setLoading(false); setValidationError(err); });
+                const res = await login(formData).catch((err) => {setLoading(false); setValidationError(err.message)});
+                setLoading(false);
+                if (res?.status === "200") {
+                    router.push("/chat")
+                } else if (res?.status === "401") {
+                    setValidationError("Invalid Credentials")
+                } else if (res?.status === "101") {
+                    router.push("/verification")
+                }
             }}>
                 <div className="my-4  flex-col flex justify-between">
                     <label>Email: </label>

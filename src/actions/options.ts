@@ -20,14 +20,16 @@ export async function changeOptions(options: any) {
     const cookie = cookies().get("session")?.value;
     const session = await decrypt(cookie);
     const userId = session?.user?.userId || null
-    if(userId === null) throw new Error("We couldn't find authorizetion signature. Please log out and log in again!")
+    if(userId === null) {return {status: "401", message:"We couldn't find your session. Please log in again."}}
     try {
         const data = await client.execute(`SELECT * FROM Options WHERE userId = '${userId}'`);
         if (data.rows[0]?.userId === undefined) {
         await client.execute(`INSERT INTO Options (userId, followup, information, history, contacts) VALUES ('${userId}', '${options.followup}', '${options.information}', '${options.history}', '${options.contacts}')`);
+        return {status: "200", message: "Options updated successfully."};
         } else {
-        await client.execute(`UPDATE Options SET followup = '${options.followup}', information = '${options.information}', history = '${options.history}', contacts = '${options.contacts}' WHERE userId = '${userId}'`);}
-    } catch (e: any) {throw new Error(e)}
+        await client.execute(`UPDATE Options SET followup = '${options.followup}', information = '${options.information}', history = '${options.history}', contacts = '${options.contacts}' WHERE userId = '${userId}'`);
+        return {status: "200", message: "Options updated successfully."};}
+    } catch (e: any) {return {status: "500", message: "We couldn't connect to the database. Please try again later."}}
 }
 
 export async function getOptions() {
@@ -44,5 +46,5 @@ export async function getOptions() {
             history: `${options?.history ? options.history : "true"}`,
             contacts: `${options?.contacts ? options.contacts : "true"}`,
         };
-    } catch (e: any) {throw new Error(e)}
+    } catch (e: any) {return {followup: "true", information: "true", history: "true", contacts: "true"}}
 }

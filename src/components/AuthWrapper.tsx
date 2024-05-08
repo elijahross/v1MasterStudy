@@ -13,7 +13,6 @@ function AuthWrapper() {
         <div className="relative max-w-2xl w-full flex flex-col justify-center items-center border-2 pt-4 rounded-xl bg-[#F7F7FF]">
             <div className="font-bold pb-4 w-full flex justify-between border-b-2 flex-row ">
             <button onClick={() => setStatus(true)} className={`btn ${status? "scale-110 font-bold" : "opycity-75"} m-auto transition-all duration-700`}>Sign Up</button>
-            
             <button onClick={() => setStatus(false)} className={`btn ${status? "opacity-75" : "scale-110 font-bold "} m-auto transition-all duration-700`}>Log In</button>
             </div>
             <div className="flex flex-row justify-between items-center w-full py-4">

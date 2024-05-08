@@ -18,12 +18,15 @@ export async function postFeedback(formData: FormData) {
     const userId = formData.get("userId");
     const reply = formData.get("reply");
     const stars = formData.get("stars");
+    try{
     const verify = await client.execute(`SELECT * FROM Feedback WHERE userId = '${userId}'`);
     if (verify.rows[0]?.userId === userId) {
     const update = await client.execute(`UPDATE Feedback SET stars = ${stars}, reply = '${reply}' WHERE userId = '${userId}'`);
+    return {status: "200", message: "Feedback submitted successfully."}
     } else {
     const data = await client.execute(`INSERT INTO Feedback (userId, stars, reply) VALUES ('${userId}', '${stars}', '${reply}')`);
-    }
+    return {status: "200", message: "Feedback submitted successfully."}
+    }} catch (e: any) {return {status: "500", message: "Could not connect to the database. Please try again later."}}
 }
 
 export async function updateInformation(formData: FormData) {
@@ -36,7 +39,9 @@ export async function updateInformation(formData: FormData) {
     const verify = await client.execute(`SELECT * FROM Account WHERE userId = '${userId}'`);
     if (verify.rows[0]?.userId === userId) {
     const update = await client.execute(`UPDATE Account SET sex = ${gender}, age = '${age}', country = ${country} WHERE userId = '${userId}'`);
+    return {status: "200", message: "Information updated successfully."}
     } else {
     const data = await client.execute(`INSERT INTO Account (sex, age, country, userId) VALUES ('${gender}', '${age}', '${country}','${userId}')`);
-    }} catch (e) {throw new Error("Could not reach the database, try again later")}
+    return {status: "200", message: "Information updated successfully."}
+    }} catch (e: any) {return {status: "500", message: "Could not connect to the database. Please try again later."}}
 }

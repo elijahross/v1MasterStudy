@@ -20,14 +20,14 @@ async function ChatPage() {
                 <FunChat />
             </div>
         )
-    } else if(session?.user?.role === '3') {
+    } else if(session?.user?.role == '3') {
         await setNewConnectionsLeft(restrict - 1).catch((err) => console.log(err));
     return (
         <div className="md:px-20 px-0">
             <DynamicStream />
         </div>
     )
-} else if(session?.user?.role === '2') {
+} else if(session?.user?.role == '2') {
     await setNewConnectionsLeft(restrict - 1).catch((err) => console.log(err));
     return (
         <div className="md:px-20 px-0">

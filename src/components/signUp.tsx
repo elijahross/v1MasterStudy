@@ -13,7 +13,16 @@ function SignUp() {
 
     return (
         <div className="items-center flex-center px-8 pt-4 w-full max-w-md">
-            <form action={async (formData) => {await signUp(formData).then(() => router.push("/verification")).catch((err) => { setLoading(false); setValidationError(err)})}}>
+            <form action={async (formData) => {
+                const res = await signUp(formData).catch((err) => setValidationError(err.message));
+                setLoading(false)
+                if (res?.status === "200") {
+                    router.push("/verification")
+                } else if (res?.status === "401") {
+                    setValidationError(res.message)
+                } else if (res?.status === "500") {
+                    setValidationError(res.message)
+            }}}>
                 <div className="flex flex-col justify-between">
                     <label >Name:</label>
                     <input id="name" name="name" required = {true}/>

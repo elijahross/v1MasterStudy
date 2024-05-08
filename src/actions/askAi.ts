@@ -50,8 +50,7 @@ export async function askAi(formData: FormData, user: User | null) {
         }
         return completion;
     } catch (err) {
-        console.log(err)
-        throw new Error("Connection with Ai-Server was compromised. Try again later, using secure line.")
+        return "Connection with Ai-Server was compromised. Try again later, using secure line."
     }
 };
 

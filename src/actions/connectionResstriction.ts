@@ -19,7 +19,7 @@ export async function getConnectionsLeft() {
             const restrict = data.rows[0]?.sessionsLeft as any;
             return restrict as number;
         } else return 0;
-    } catch (e: any) { throw new Error("Sorry, we couldn't connect to the database. Please try again later.") }
+    } catch (e: any) { return 1}
 }
 
 export async function setNewConnectionsLeft(newRestrict: number) {
@@ -29,6 +29,7 @@ export async function setNewConnectionsLeft(newRestrict: number) {
     const userId = session?.user?.userId;
     try {
         await client.execute(`UPDATE Session SET sessionsLeft = '${newRestrict}' WHERE userId = '${userId}'`);
-    } catch (e: any) { throw new Error("Sorry, we couldn't connect to the database. Please try again later.") }
+        return {status: "200", message: "Restriction updated successfully."}
+    } catch (e: any) { return {status: "500", message: "Sorry, we couldn't connect to the database. Please try again later."} }
 
 }

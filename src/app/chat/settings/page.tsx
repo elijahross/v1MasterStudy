@@ -4,8 +4,6 @@ import Image from "next/image"
 import { changeOptions, getOptions } from "@/actions/options";
 import { useRouter } from "next/navigation";
 import loader from "../../../../public/loader.svg"
-import { error } from "console";
-import { json } from "stream/consumers";
 
 interface Options {
     followup: boolean | null,
@@ -26,14 +24,10 @@ function SettingsPage() {
     useEffect(() => {
         const getSettings = async () => {
             const res = await getOptions().catch((error) => setErr(error.message));
-            if (res === undefined || res === null) {
-                return;
-            } else {
                 setContact(res.followup === "true");
                 setShareData(res.information === "true");
                 setShareHistory(res.history === "true");
                 setShareContact(res.contacts === "true");
-            }
         };
         getSettings();
     }, [])
@@ -45,7 +39,13 @@ function SettingsPage() {
             history: `${shareHistory}`,
             contacts: `${contact}`
         }
-        await changeOptions(options).then(() => setLoading(false)).catch((error) => setErr(error.message))
+        const res = await changeOptions(options).catch((error) => setErr(error.message));
+        setLoading(false);
+        if (res?.status === "500") {
+            setErr("Sorry, we couldn't connect to the database. Please try again later.");
+        } else if (res?.status === "401") {
+            setErr("We couldn't find your session. Please log in again.");
+        }
 
     }
     return (

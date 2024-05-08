@@ -95,7 +95,15 @@ function AssessmentPage() {
                 <p className="text-center text-sm">Please take your time to give most precise information about your experience with our chat-agent</p>
             </div>
             <div>
-                <form className="w-full" action={async(formData) => await setAssessmentValues(formData).then(() => router.push("/chat/feedback")).catch((error: Error)=> {setLoading(false); setErr(error.message)})} onSubmit={() => setLoading(true)}>
+                <form className="w-full" action={async(formData) => {
+                    const res = await setAssessmentValues(formData).catch((error: Error)=> {setLoading(false); setErr(error.message)});
+                    setLoading(false);
+                    if (res?.status === "200") {
+                        router.push("/chat/feedback");
+                    } else if (res?.status === "500") {
+                        setErr(res.message);
+                    }
+                }} onSubmit={() => setLoading(true)}>
                     {questions.map((q, index) => (
                         <div key={index} className="mb-8">
                             <LikertScale question={q.question} index={index+1} />

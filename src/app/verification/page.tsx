@@ -29,12 +29,16 @@ function VerificationPage() {
 
     async function handleSubmitCode(formData: FormData) {
         try {
-            const check = formData.get("code")
-            const user = await verifyUser(formData) as any;
-            setLoading(false)
-            if (check === user.userId) {
-                setUid(check);
+            const check = formData.get("code");
+            const res = await verifyUser(formData) as any;
+            setLoading(false);
+            if (res?.status === "200") {
                 setTab(false);
+                setUid(check);
+            } else if (res?.status === "401") {
+                setErr(res.message)
+            } else if (res?.status === "500") {
+                setErr(res.message)
             }
 
         } catch (error: any) { setLoading(false); setErr(error.message) }
@@ -42,8 +46,13 @@ function VerificationPage() {
 
     async function handleSubmitData(formData: FormData) {
         try {
-            await updateInformation(formData).then(() => router.push("/chat"));
+            const res = await updateInformation(formData);
             setLoading(false)
+            if (res?.status === "200") {
+                router.push("/chat")
+            } else if (res?.status === "500") {
+                setErr(res.message)
+            }
         } catch (error: any) { setLoading(false); setErr(error.message) }
     }
 
@@ -70,11 +79,11 @@ function VerificationPage() {
 
                 <div className="flex flex-col w-full h-full justify-center px-8 pt-20">
                     <h2 className="text-2xl w-full font-bold text-center mb-20">You are almost there!</h2>
-                    <div className="p-4 border-2 rounded-xl flex flex-col max-w-xl m-auto">
-                        <span className="mb-4">Tell us few details about you:</span>
+                    <div className="sm:p-8 p-4 border-2 rounded-xl flex flex-col max-w-xl m-auto">
+                        <span className="mb-4">Tell us few details about youself:</span>
                         <div className="flex flex-row items-center justify-start">
                             <Image src={newuser} alt="avatar_icon" width={200} height={200} className="mr-8 sm:block hidden"/>
-                            <form className="flex flex-col w-full" action={async (formData) => {await handleSubmitData(formData).catch((error) => { setLoading(false); setErr(error.message) })}} onSubmit={() => setLoading(true)}>
+                            <form className="flex flex-col w-full" action={async (formData) => {await handleSubmitData(formData).catch((error) => {setLoading(false); setErr(error.message) })}} onSubmit={() => setLoading(true)}>
                                 <label>Age:</label>
                                 <input className="mb-4 rounded-md" type="number" name="age" id="age" min="18" max="75" required={true} />
                                 <label>Gender:</label>

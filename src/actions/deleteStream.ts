@@ -9,8 +9,6 @@ export async function deleteStream(streamId: string | null, sessionId: string | 
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ session_id: sessionId }),
-    })
-    return;
-    } catch (e) {
-        console.log(e);}
+    });
+    } catch (e) {console.log(e);}
     }
