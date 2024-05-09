@@ -14,7 +14,7 @@ export async function handleStart(results: string | undefined, streamId: string,
                         session_id: `${sessionId}`,
                         script: {
                             type: 'text',
-                            subtitles: 'true',
+                            subtitles: 'false',
                             provider: {
                                 type: 'elevenlabs',
                                 voice_id: 'EXAVITQu4vr4xnSDxMaL',

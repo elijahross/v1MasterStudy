@@ -12,7 +12,7 @@ async function Home() {
         return redirect('/chat');
     } else
         return (
-            <main className="flex flex-col w-full h-full items-center justify-center">
+            <main className="flex flex-col w-full h-screen items-center justify-between">
                 <div className="w-full flex flex-row justify-between sm:px-8 px-4 items-center sm:mt-10 mt-4 mb-10">
                     <Link href="/" className={`hover:scale-105 active:scale-100 transition-all duration-700 cursor-pointer`} >
                         <Image src={timer} alt="altss" width={30} className="h-auto" />
