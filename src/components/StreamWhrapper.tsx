@@ -20,26 +20,23 @@ interface User {
     email: string | null;
 }
 
-
 const RTCPeerConnection = (
     window.RTCPeerConnection
 ).bind(window);
 
 let peerConnection: RTCPeerConnection | null;
 let sessionClientAnswer: RTCSessionDescriptionInit;
-let videoIsPlaying: boolean;
-let lastBytesReceived: number;
 let streamId: string;
 let sessionId: string;
 let offer: RTCSessionDescriptionInit | undefined;
 let iceServers: RTCIceServer[] | undefined;
-let timer = [] as NodeJS.Timeout[];
-
+let idleVideoElement: HTMLVideoElement;
 let videoElement: HTMLVideoElement;
 let statusDisplay: HTMLLabelElement;
 
 export default function StreamWhrapper() {
     const router = useRouter();
+    const [streamingStatus, setStreamingStatus] = useState(false as boolean);
     const [newResponse, setNewResponse] = useState("" as string | undefined);
     const [user, setUser] = useState({} as User | null);
     const [loading, setLoading] = useState(false);
@@ -51,16 +48,108 @@ export default function StreamWhrapper() {
     const refForm = useRef() as any;
     const scrolRef = useRef() as any;
     const inputRef = useRef() as any;
+    const timer = [] as NodeJS.Timeout[];
     const timerArr = [] as NodeJS.Timeout[];
+    let lastBytesReceived = 0;
+
+    function playVideoElement(live: boolean, stream: MediaStream) {
+        if(!videoElement.srcObject) {
+            videoElement.srcObject = stream;
+        }
+        videoElement.style.opacity = live? "0%" : "100%";
+    }
+
+    function onTrack(event: RTCTrackEvent) {
+        if (!event.track) { return }
+        else {
+            timer.push(
+                setInterval(async () => {
+                    if (peerConnection === null) { return }
+                    const stats = await peerConnection.getStats(event.track).catch((error) => {return}) as any;
+                    stats?.forEach((report: any) => {
+                        if (report.type === 'inbound-rtp' && report.mediaType === 'video') {
+                            const changeInUpstream = streamingStatus !== report.bytesReceived > lastBytesReceived;
+                            if (changeInUpstream) {
+                                playVideoElement(streamingStatus, event.streams[0])
+                                setStreamingStatus(report.bytesReceived > lastBytesReceived);
+                            } else {videoElement.style.opacity = "0%";}
+                                lastBytesReceived = report.bytesReceived;
+                        }
+                    });
+                }, 1000))
+        }
+    }
+
+    async function handleDestroy() {
+        try {
+            setStreamingStatus(false);
+            deleteStream(streamId, sessionId);
+            closePC();
+        } catch (e: any) {
+            console.log(e);
+            closePC();
+        }
+    }
+
+    async function closePC() {
+        const pc = peerConnection;
+        if (!pc) return null;
+        pc.close();
+        pc.removeEventListener('icecandidate', (ev) => onIceCandidate, true);
+        pc.removeEventListener('iceconnectionstatechange', () => console.log("ok"), true);
+        pc.removeEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; setStreamingStatus(false); } else { statusDisplay.innerText = "🔴 offline" } })
+        pc.removeEventListener('track', (ev: RTCTrackEvent) => onTrack(ev), true);
+        if (pc === peerConnection) {
+            peerConnection = null;
+            return null;
+        }
+    }
+
+    async function handleConnect() {
+        if (!peerConnection) {
+            await createStream().then((res) => {
+                streamId = res?.streamId || "";
+                sessionId = res?.sessionId || "";
+                offer = res?.offer || undefined;
+                iceServers = res?.iceServers || undefined;
+            }) as any;
+            closePC();
+            try {
+                peerConnection = new RTCPeerConnection({ iceServers })
+                peerConnection.addEventListener('icecandidate', async (ev: RTCPeerConnectionIceEvent) => {
+                    if (ev.candidate) {
+                        const { candidate, sdpMid, sdpMLineIndex } = ev.candidate;
+                        await onIceCandidate(candidate, sdpMid, sdpMLineIndex, streamId, sessionId)
+                    }
+                }, true);
+                peerConnection.addEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; } else { statusDisplay.innerText = "🔴 offline" } })
+                peerConnection.addEventListener('iceconnectionstatechange', () => { if (peerConnection?.iceConnectionState === "failed" || peerConnection?.iceConnectionState === "closed") { setStreamingStatus(false); closePC(); } }, true);
+                peerConnection.addEventListener('track', (ev: RTCTrackEvent) => onTrack(ev), true);
+
+                if (offer === undefined) { console.log('offer is undefined'); return; };
+                await peerConnection.setRemoteDescription(offer);
+                sessionClientAnswer = await peerConnection.createAnswer() as any;
+                await peerConnection.setLocalDescription(sessionClientAnswer);
+
+                await createSdpResponse(streamId, sessionId, sessionClientAnswer);
+
+            } catch (e: any) {
+                setStreamingStatus(false);
+                closePC();
+                return;
+            }
+        }
+    }
 
     useEffect(() => {
         const newConnection = async () => {
-            await handleConnect().catch((error) =>{closePC(); handleDestroy();});
+            await handleConnect().catch((error) => { closePC(); handleDestroy(); });
         };
         statusDisplay = document.getElementById("status-display") as HTMLLabelElement;
         videoElement = document.getElementById('video-element') as HTMLVideoElement;
+        idleVideoElement = document.getElementById('idle-video-element') as HTMLVideoElement;
         videoElement.setAttribute('playsinline', '');
-
+        idleVideoElement.setAttribute('playsinline', '');
         getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Welcome ${res?.user?.name || ""}, my name is Kim. Here is your safe space where you can talk about everything you want.` }]) });
 
         timer.push(setTimeout(() => {
@@ -70,7 +159,6 @@ export default function StreamWhrapper() {
         return () => {
             timer.forEach((interval: NodeJS.Timeout) => clearInterval(interval));
             handleDestroy();
-            setChatWindow([]);
         };
     }, []);
 
@@ -81,13 +169,12 @@ export default function StreamWhrapper() {
     }, [chatWindow]);
 
     useEffect(() => {
-        if (newResponse !== undefined || newResponse !== "") {
-            setLoading(false);
+        if (newResponse !== undefined) {
             setChatWindow([...chatWindow, { ai: newResponse }]);
-            setNewResponse("");
+            setNewResponse(undefined);
             setLoading(false);
         }
-    }, [videoElement, newResponse]);
+    }, [streamingStatus]);
 
     useEffect(() => {
         if (start) {
@@ -109,9 +196,8 @@ export default function StreamWhrapper() {
     }, [start, seconds]);
 
     async function submitForm(formData: any) {
-        const results = await askAi(formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { ai: "Error:" + error }]})}) as string;
-        console.log(results)
-        handleStart(results, streamId, sessionId);
+        const results = await askAi(formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { ai: "Error:" + error }] }) }) as string;
+        await handleStart(results, streamId, sessionId).catch(() => { setLoading(false); setChatWindow((prev: any) => { return [...prev, { ai: results }] }) });
         setNewResponse(results);
     }
 
@@ -126,8 +212,11 @@ export default function StreamWhrapper() {
                 </div>
                 <div className="w-[200px] h-[200px] absolute rounded-full right-0 -top-20 circle1" />
                 <div className="w-[200px] h-[200px] absolute rounded-full top-32 right-64 circle2" />
-                <div className="w-[250px] h-[250px] absolute right-0 top-0 rounded-full overflow-hidden z-auto md:mr-10 mr-0">
-                    <video id="video-element" src="/idle.mp4" autoPlay loop className="bg-clip-border w-full h-full"> #your Browser doesn't support this format</video>
+                <div className="w-[250px] h-[250px] absolute right-0 top-0 rounded-full overflow-hidden z-auto md:mr-10 mr-0 z-10">
+                    <video id="idle-video-element" src="/idle.mp4" autoPlay loop className="bg-clip-border w-full h-full"> #your Browser doesn't support this format</video>
+                </div>
+                <div className={` w-[250px] h-[250px] absolute right-0 top-0 rounded-full overflow-hidden z-auto md:mr-10 mr-0 z-20`}>
+                    <video id="video-element" src="/idle.mp4" autoPlay className={`bg-clip-border w-full h-full transition-all duration-500`}> #your Browser doesn't support this format</video>
                 </div>
                 <div className="absolute text-sm top-[260px] md:right-[100px] right-[60px] rounded-full px-2 py-1 bg-gray-200 h-fit w-fit">status: <label id="status-display">🔴 offline</label></div>
             </div>
@@ -160,118 +249,4 @@ export default function StreamWhrapper() {
             </div>
         </div>
     )
-}
-
-export async function handleConnect() {
-    if(!peerConnection) {
-    await createStream().then((res) => {
-        streamId = res?.streamId || "";
-        sessionId = res?.sessionId || "";
-        offer = res?.offer || undefined;
-        iceServers = res?.iceServers || undefined;
-    }) as any;
-    closePC();
-    try {
-        peerConnection = new RTCPeerConnection({ iceServers })
-        peerConnection.addEventListener('icecandidate', async (ev: RTCPeerConnectionIceEvent) => {
-            if (ev.candidate) {
-                const { candidate, sdpMid, sdpMLineIndex } = ev.candidate;
-                await onIceCandidate(candidate, sdpMid, sdpMLineIndex, streamId, sessionId)
-            }}, true);
-        peerConnection.addEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; playIdleVideo(); } else { statusDisplay.innerText = "🔴 offline" } })
-        peerConnection.addEventListener('iceconnectionstatechange', () => { if (peerConnection?.iceConnectionState === "failed" || peerConnection?.iceConnectionState === "closed") { playIdleVideo(); closePC(); } }, true);
-        peerConnection.addEventListener('track', (ev: RTCTrackEvent) => onTrack(ev), true);
-
-        if (offer === undefined) { console.log('offer is undefined'); return; };
-        await peerConnection.setRemoteDescription(offer);
-        sessionClientAnswer = await peerConnection.createAnswer() as any;
-        await peerConnection.setLocalDescription(sessionClientAnswer);
-
-        await createSdpResponse(streamId, sessionId, sessionClientAnswer);
-
-    } catch (e: any) {
-        console.log(e);
-        playIdleVideo();
-        closePC();
-        return;
-    }}
-}
-
-export async function closePC() {
-    const pc = peerConnection;
-    if (!pc) return null;
-    pc.close();
-    pc.removeEventListener('icecandidate', (ev) => onIceCandidate, true);
-    pc.removeEventListener('iceconnectionstatechange', () => console.log("ok"), true);
-    pc.removeEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; playIdleVideo(); } else { statusDisplay.innerText = "🔴 offline" } })
-    pc.removeEventListener('track', (ev: RTCTrackEvent) => onTrack(ev), true);
-    if (pc === peerConnection) {
-        peerConnection = null;
-        return null;
-    }
-}
-
-export async function handleDestroy() {
-    try {
-        playIdleVideo();
-        deleteStream(streamId, sessionId);
-        closePC();
-    } catch (e: any) {
-        console.log(e);
-        closePC();
-    }
-}
-
-export function onVideoStatusChange(videoIsPlaying: boolean, stream: MediaStream | null) {
-    if (videoIsPlaying) {
-        setVideoElement(stream);
-    } else {
-        playIdleVideo();
-    }
-}
-
-export function setVideoElement(stream: MediaStream | null) {
-    if (!stream) { return };
-    videoElement.loop = false;
-    videoElement.srcObject = stream;
-    // safari hotfix
-    if (videoElement.paused) {
-        videoElement
-            .play()
-            .then((_) => { })
-            .catch((e) => { });
-    }
-}
-
-export function playIdleVideo() {
-    videoElement.srcObject = null;
-    videoElement.loop = true;
-    videoElement.src = "/idle.mp4";
-    // safari hotfix
-    if (videoElement.paused) {
-        videoElement
-            .play()
-            .then((_) => { })
-            .catch((e) => { });
-    }
-}
-
-export function onTrack(event: RTCTrackEvent) {
-    if (!event.track) {return}
-    else {
-    timer.push(
-        setInterval(async () => {
-            if (peerConnection === null) {return}
-            const stats = await peerConnection.getStats();
-            stats?.forEach((report) => {
-                if (report.type === 'inbound-rtp' && report.mediaType === 'video') {
-                    const videoStatusChanged = videoIsPlaying !== report.bytesReceived > lastBytesReceived;
-                    if (videoStatusChanged) {
-                        videoIsPlaying = report.bytesReceived > lastBytesReceived;
-                        onVideoStatusChange(videoIsPlaying, event.streams[0]);
-                    }
-                    lastBytesReceived = report.bytesReceived;
-                }
-            });
-    }, 500))}
 }

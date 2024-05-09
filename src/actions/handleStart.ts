@@ -36,6 +36,6 @@ export async function handleStart(results: string | undefined, streamId: string,
             });
             if (!playResponse.ok) { throw new Error('Error during play request') }
         } catch (e: any) {
-            console.log(e);
+            throw new Error(e);
         }
 }

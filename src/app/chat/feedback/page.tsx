@@ -64,7 +64,7 @@ function FeedbackPage() {
                 <h1 className="text-xl mb-6">
                     {user.name ? `Hi ${user.name}, would you like to share your state?` : 'Hello, would you like to share your state?'}
                 </h1>
-            <form onSubmit={handleSubmit} className="w-max-[480px] m-auto flex flex-col justify-center items-center">
+            <form onSubmit={handleSubmit} className="w-[80%] m-auto flex flex-col justify-center items-center">
                 <input type="hidden" id="userId" name="userId" value={user.userId || ""} />
                 <input type="hidden" id="stars" name="stars" value={feed || ""} />
                 <textarea id="reply" name="reply" autoComplete="off" className="border-2 border-dark p-4 rounded-xl w-full flex text-dark felx-center items-center bg-transparent outline-none mb-4" placeholder="How was your expirience with us?" />
