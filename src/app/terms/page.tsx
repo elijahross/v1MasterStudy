@@ -6,7 +6,7 @@ import timer from "../../../public/world.svg"
 
 function TermsPage() {
     return (
-        <div className="flex flex-col w-full h-full justify-center px-8 pb-10">
+        <div className="flex flex-col w-full h-full justify-center sm:px-8 px-4 pb-10">
             <div className="w-full flex flex-row justify-between mt-10 mb-8">
                 <Link href="/" className={`hover:scale-105 active:scale-100 transition-all duration-700 cursor-pointer`} >
                     <Image src={timer} alt="altss" width={30} className="h-auto" />

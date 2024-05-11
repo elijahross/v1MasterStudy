@@ -52,33 +52,46 @@ export default function StreamWhrapper() {
     const timerArr = [] as NodeJS.Timeout[];
     let lastBytesReceived = 0;
 
-    function playVideoElement(live: boolean, stream: MediaStream) {
+    function playVideoElement(stream: MediaStream) {
         if(!videoElement.srcObject) {
             videoElement.srcObject = stream;
+              // safari hotfix
+            if (videoElement.paused) {
+                videoElement
+                .play()
+                .then((_) => {})
+                .catch((e) => {console.log(e)});
+            }
         }
-        videoElement.style.opacity = live? "0%" : "100%";
+        videoElement.style.opacity = "100%";
+        if (videoElement.paused) {
+            videoElement
+            .play()
+            .then((_) => {})
+            .catch((e) => {});
+        }
     }
 
     function onTrack(event: RTCTrackEvent) {
         if (!event.track) { return }
-        else {
             timer.push(
                 setInterval(async () => {
                     if (peerConnection === null) { return }
-                    const stats = await peerConnection.getStats(event.track).catch((error) => {return}) as any;
-                    stats?.forEach((report: any) => {
-                        if (report.type === 'inbound-rtp' && report.mediaType === 'video') {
+                    else {
+                    const stats = await peerConnection.getStats(event.track).catch((error) => {console.log(error)}) as any;
+                    stats.forEach((report: any) => {
+                        if (report.type === 'inbound-rtp' && report.kind === 'video') {
+                            console.log("somewhere here?")
                             const changeInUpstream = streamingStatus !== report.bytesReceived > lastBytesReceived;
                             if (changeInUpstream) {
-                                playVideoElement(streamingStatus, event.streams[0])
+                                playVideoElement(event.streams[0])
                                 setStreamingStatus(report.bytesReceived > lastBytesReceived);
                             } else {videoElement.style.opacity = "0%";}
                                 lastBytesReceived = report.bytesReceived;
                         }
-                    });
+                    });}
                 }, 1000))
         }
-    }
 
     async function handleDestroy() {
         try {
@@ -122,7 +135,7 @@ export default function StreamWhrapper() {
                         await onIceCandidate(candidate, sdpMid, sdpMLineIndex, streamId, sessionId)
                     }
                 }, true);
-                peerConnection.addEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; } else { statusDisplay.innerText = "🔴 offline" } })
+                peerConnection.addEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online";} else { statusDisplay.innerText = "🔴 offline" } })
                 peerConnection.addEventListener('iceconnectionstatechange', () => { if (peerConnection?.iceConnectionState === "failed" || peerConnection?.iceConnectionState === "closed") { setStreamingStatus(false); closePC(); } }, true);
                 peerConnection.addEventListener('track', (ev: RTCTrackEvent) => onTrack(ev), true);
 
@@ -148,8 +161,7 @@ export default function StreamWhrapper() {
         statusDisplay = document.getElementById("status-display") as HTMLLabelElement;
         videoElement = document.getElementById('video-element') as HTMLVideoElement;
         idleVideoElement = document.getElementById('idle-video-element') as HTMLVideoElement;
-        videoElement.setAttribute('playsinline', '');
-        idleVideoElement.setAttribute('playsinline', '');
+        videoElement.style.opacity = "0%"
         getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Welcome ${res?.user?.name || ""}, my name is Kim. Here is your safe space where you can talk about everything you want.` }]) });
 
         timer.push(setTimeout(() => {
@@ -213,10 +225,10 @@ export default function StreamWhrapper() {
                 <div className="w-[200px] h-[200px] absolute rounded-full right-0 -top-20 circle1" />
                 <div className="w-[200px] h-[200px] absolute rounded-full top-32 right-64 circle2" />
                 <div className="w-[250px] h-[250px] absolute right-0 top-0 rounded-full overflow-hidden z-auto md:mr-10 mr-0 z-10">
-                    <video id="idle-video-element" src="/idle.mp4" autoPlay loop className="bg-clip-border w-full h-full"> #your Browser doesn't support this format</video>
+                    <video id="idle-video-element" src="/idle.mp4" autoPlay playsInline loop className="bg-clip-border w-full h-full"> #your Browser doesn't support this format</video>
                 </div>
                 <div className={` w-[250px] h-[250px] absolute right-0 top-0 rounded-full overflow-hidden z-auto md:mr-10 mr-0 z-20`}>
-                    <video id="video-element" src="/idle.mp4" autoPlay className={`bg-clip-border w-full h-full transition-all duration-500`}> #your Browser doesn't support this format</video>
+                    <video id="video-element" onEnded={(e) => {e.currentTarget.style.opacity="0%"}} src="/idle.mp4" autoPlay playsInline={true} className={`bg-clip-border w-full h-full transition-all duration-500`}> #your Browser doesn't support this format</video>
                 </div>
                 <div className="absolute text-sm top-[260px] md:right-[100px] right-[60px] rounded-full px-2 py-1 bg-gray-200 h-fit w-fit">status: <label id="status-display">🔴 offline</label></div>
             </div>
@@ -244,7 +256,7 @@ export default function StreamWhrapper() {
                         <p className="mb-4">2. The conversation will last for 10 minutes, and you will be redirected to the questionnaire straight afterward</p>
                         <p className="mb-4">3. TheLivingRoom is designed to provide support and guidance in form of an open-ended conversation. You can either select a conversation topic which relates to your own needs or just role-play in order to discover the capabilities of this platform.</p>
                     </div>
-                    <button onClick={() => setStart(true)} className="btn border-2">Start</button>
+                    <button onClick={() => {setStart(true); videoElement.play(); idleVideoElement.play()}} className="btn border-2">Start</button>
                 </div>
             </div>
         </div>
