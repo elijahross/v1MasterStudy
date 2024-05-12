@@ -4,6 +4,7 @@ import { getSession } from "@/actions/session";
 import { verifyUser } from "@/actions/auth";
 import { updateInformation } from "@/actions/feedback";
 import { useState, useEffect } from "react";
+import { z } from "zod";
 import Image from "next/image";
 import loader from "../../../public/loader.svg"
 import mail from "../../../public/email.svg"
@@ -16,6 +17,9 @@ function VerificationPage() {
     const [uid, setUid] = useState("" as any);
     const [tab, setTab] = useState(true);
     const router = useRouter();
+    const formSchema = z.object({
+        code: z.string().uuid({message: "The code should have this format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"}),
+    })
     const genderOptions = [
         { value: '0', label: 'Female' },
         { value: '1', label: 'Male' },
@@ -28,6 +32,13 @@ function VerificationPage() {
     }, [])
 
     async function handleSubmitCode(formData: FormData) {
+        const check = formSchema.safeParse({
+            code: formData.get("code")});
+        if (!check.success) {
+            setLoading(false);
+            setErr(check.error.issues[0].message);
+            return;
+        } else {
         try {
             const check = formData.get("code");
             const res = await verifyUser(formData) as any;
@@ -41,7 +52,7 @@ function VerificationPage() {
                 setErr(res.message)
             }
 
-        } catch (error: any) { setLoading(false); setErr(error.message) }
+        } catch (error: any) { setLoading(false); setErr(error.message) }}
     }
 
     async function handleSubmitData(formData: FormData) {
