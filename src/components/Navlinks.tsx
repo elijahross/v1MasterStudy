@@ -31,7 +31,7 @@ function Navlinks() {
                     alt="chat_icon"
                     width={20}
                     height={20}
-                    className="mr-4" />
+                    className="mr-4 dark:invert" />
                 <button onClick={() => {router.refresh(); router.push("/chat"); }}>
                     Chat
                 </button>
@@ -43,7 +43,7 @@ function Navlinks() {
                     alt={item.name}
                     width={20}
                     height={20}
-                    className="mr-4" />
+                    className="mr-4 dark:invert" />
                 <Link key={20+index} href={item.link} className={`w-full`}>
                     {item.name}
                 </Link>
@@ -55,7 +55,7 @@ function Navlinks() {
                     alt="logout_icon"
                     width={20}
                     height={20}
-                    className="mr-4" />
+                    className="mr-4 dark:invert" />
                 <button onClick={async () => await logout().then(() => router.push("/"))}>
                     Log out
                 </button>
