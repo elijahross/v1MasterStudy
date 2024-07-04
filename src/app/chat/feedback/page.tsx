@@ -67,7 +67,7 @@ function FeedbackPage() {
             <form onSubmit={handleSubmit} className="w-[80%] m-auto flex flex-col justify-center items-center">
                 <input type="hidden" id="userId" name="userId" value={user.userId || ""} />
                 <input type="hidden" id="stars" name="stars" value={feed || ""} />
-                <textarea id="reply" name="reply" autoComplete="off" className="border-2 border-dark p-4 rounded-xl w-full flex felx-center items-center bg-transparent outline-none mb-4" placeholder="How was your expirience with us?" />
+                <textarea id="reply" name="reply" autoComplete="off" className="border-2 p-4 rounded-xl w-full flex felx-center items-center bg-transparent outline-none mb-4" placeholder="How was your expirience with us?" />
                 <p className="text-red-400 text-center my-4">{error}</p>
                 <button type="submit" className="btn border-2 items-center flex justify-center dark:border-dark">{loading ? <Image src={loader} alt="spinner" width={20} height={20} className="m-auto self-center dark:invert"/> : "Update"}</button>
             </form>
