@@ -244,8 +244,8 @@ export default function StreamWhrapper() {
             </div>
             <div className="w-full flex flex-row">
                 <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" action={(formData) => { submitForm(formData); refForm.current.reset() }} onSubmit={() => { setLoading(true); setChatWindow([...chatWindow, { user: inputRef.current.value }]) }}>
-                    <input ref={inputRef} name="text" type="text" maxLength={400} autoComplete="off" placeholder="Start Conversation ..." className="border-2 border-dark p-4 rounded-full w-full flex felx-center items-center text-gray bg-transparent outline-none" />
-                    <button type="submit" className="ml-4 p-2 border-dark hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2 dark:invert" /></button>
+                    <input ref={inputRef} name="text" type="text" maxLength={400} autoComplete="off" placeholder="Start Conversation ..." className="border-2 border-light p-4 rounded-full w-full flex felx-center items-center text-gray bg-transparent outline-none" />
+                    <button type="submit" className="ml-4 p-2 border-light hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2 dark:invert" /></button>
                 </form>
             </div>
             <div className={`${start ? "hidden" : "block"} z-90 fixed top-0 left-0 w-full h-full bg-[rgba(23,23,23,0.6)] flex items-center justify-center`}>
