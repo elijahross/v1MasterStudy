@@ -11,14 +11,6 @@
 }
 
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 247, 247, 247;
-    --background-start-rgb: 31, 31, 31;
-    --background-end-rgb: 31, 31, 31;
-  }
-}
-
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
@@ -100,7 +92,6 @@ input {
 }
 
 .chatContainer {
-  height: 600px;
   mask: linear-gradient(0deg, transparent, white 10%, white 80%, transparent);
   -webkit-mask: linear-gradient(0deg,
       transparent,

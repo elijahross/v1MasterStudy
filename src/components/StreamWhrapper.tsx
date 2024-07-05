@@ -78,10 +78,9 @@ export default function StreamWhrapper() {
                 setInterval(async () => {
                     if (peerConnection === null) { return }
                     else {
-                    const stats = await peerConnection.getStats(event.track).catch((error) => {console.log(error)}) as any;
+                    const stats = await peerConnection.getStats(event.track).catch((error) =>{}) as any;
                     stats.forEach((report: any) => {
                         if (report.type === 'inbound-rtp' && report.kind === 'video') {
-                            console.log("somewhere here?")
                             const changeInUpstream = streamingStatus !== report.bytesReceived > lastBytesReceived;
                             if (changeInUpstream) {
                                 playVideoElement(event.streams[0])
@@ -214,8 +213,8 @@ export default function StreamWhrapper() {
     }
 
     return (
-        <div className="relative flex w-full h-screen flex-col items-center justify-between py-4">
-            <div className="relative w-full xs:h-[30%] h-[100%] my-4 flex items-center m-auto">
+        <div className="relative flex w-full h-screen min-h-[600px] flex-col items-center justify-between py-4">
+            <div className="relative w-full xs:h-[30%] h-[100%] my-4 flex items-center m-auto mb-20">
                 <div className="absolute md:top-[65px] top-[100%] flex flex-row items-center">
                     <Image src={timerImage} alt="timer_icon" className="h-auto aspect-square w-[30px] mr-4 opacity-75" />
                     <p className={`${minutes === 0 ? "text-red-400" : ""}`}>
@@ -232,10 +231,10 @@ export default function StreamWhrapper() {
                 </div>
                 <div className="absolute text-sm top-[260px] md:right-[100px] right-[60px] rounded-full px-2 py-1 bg-gray-200 h-fit w-fit">status: <label id="status-display">🔴 offline</label></div>
             </div>
-            <div id="chatContainer" className="chatContainer w-full flex flex-col overflow-y-auto mb-8 py-8">
+            <div id="chatContainer" className="chatContainer max-h-[600px] h-full w-full flex flex-col overflow-y-auto mb-8 py-8">
                 {chatWindow.map((msg: any, index: number) => (
                     <div key={index} className={`w-full my-2 flex text-sm ${msg.user ? "justify-start " : "justify-end "}`}>
-                        <div className={`max-w-[380px] w-fit flex p-4 rounded-2xl bg-gray-200 items-center dark:bg-dark`}>
+                        <div className={`max-w-[380px] w-fit flex p-4 rounded-2xl bg-gray-200 items-center`}>
                             <p className="">{msg.user || msg.ai}</p>
                         </div>
                     </div>
@@ -245,7 +244,7 @@ export default function StreamWhrapper() {
             <div className="w-full flex flex-row">
                 <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" action={(formData) => { submitForm(formData); refForm.current.reset() }} onSubmit={() => { setLoading(true); setChatWindow([...chatWindow, { user: inputRef.current.value }]) }}>
                     <input ref={inputRef} name="text" type="text" maxLength={400} autoComplete="off" placeholder="Start Conversation ..." className="border-2 border-light p-4 rounded-full w-full flex felx-center items-center text-gray bg-transparent outline-none" />
-                    <button type="submit" className="ml-4 p-2 border-light hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2 dark:invert" /></button>
+                    <button type="submit" className="ml-4 p-2 border-light hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2" /></button>
                 </form>
             </div>
             <div className={`${start ? "hidden" : "block"} z-90 fixed top-0 left-0 w-full h-full bg-[rgba(23,23,23,0.6)] flex items-center justify-center`}>

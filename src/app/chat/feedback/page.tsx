@@ -69,7 +69,7 @@ function FeedbackPage() {
                 <input type="hidden" id="stars" name="stars" value={feed || ""} />
                 <textarea id="reply" name="reply" autoComplete="off" className="border-2 p-4 rounded-xl w-full flex felx-center items-center bg-transparent outline-none mb-4" placeholder="How was your expirience with us?" />
                 <p className="text-red-400 text-center my-4">{error}</p>
-                <button type="submit" className="btn border-2 items-center flex justify-center dark:border-dark">{loading ? <Image src={loader} alt="spinner" width={20} height={20} className="m-auto self-center dark:invert"/> : "Update"}</button>
+                <button type="submit" className="btn border-2 items-center flex justify-center border-light">{loading ? <Image src={loader} alt="spinner" width={20} height={20} className="m-auto self-center"/> : "Update"}</button>
             </form>
         </div>
     );
