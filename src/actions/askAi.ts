@@ -18,7 +18,7 @@ const client = new BedrockAgentRuntimeClient({
 export async function askAi(formData: FormData, user: User | null) {
     const text = formData.get('text') as string;
     const agentId = "QKWKWUXKN1";
-    const agentAliasId = "TMGHU5TFF1";
+    const agentAliasId = "8Q8TIKLYNQ";
     const sessionId = user?.userId || "undefinedUser";
 
     const command = new InvokeAgentCommand({

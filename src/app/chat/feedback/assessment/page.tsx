@@ -12,81 +12,171 @@ function AssessmentPage() {
     const [loading, setLoading] = useState(false);
     const questions = [
         {
-            question: "1. Using this platform was frustrating experience."
+            question: "1. I find this AI agent intelligent."
         },
         {
-            question: "2. This platform was easy to use."
+            question: "2. This AI agent seems well-trained."
         },
         {
-            question: "3. The agent seems to have a lot in common with me."
+            question: "3. I feel that this AI agent cares about me."
         },
         {
-            question: "4. I can identify with the personality traits exhibited by the agent."
+            question: "4. This AI agent appears honest."
         },
         {
-            question: "5. The agent appears to have thoughts and values similar to mine."
+            question: "5. I believe this AI agent has my interests at heart."
         },
         {
-            question: "6. The chat-agent doesn't represent someone I could be friends with."
+            question: "6. I find this AI agent trustworthy."
         },
         {
-            question: "7. The chat-agent can easily understand if I want to change the topic of conversation."
+            question: "7. This AI agent seems to have expertise."
         },
         {
-            question: "8. The agent can pick up on the implied meaning behind what I say, not just the literal words."
+            question: "8. This AI agent doesn't come across as self-centered."
         },
         {
-            question: "9. The agent responses show it gets emotionally involved when I describe personal problems."
+            question: "9. I feel this AI agent is concerned with my well-being."
         },
         {
-            question: "10. The agent responses look emotionally affected when I mention distressing news or events."
+            question: "10. I perceive this AI agent as honorable."
         },
         {
-            question: "11. The agent sometimes struggles to respond appropriately in line with natural conversation flow."
+            question: "11. This AI agent appears well-informed."
         },
         {
-            question: "12. The agent has difficulty judging if a response might come across as rude or inappropriate."
+            question: "12. I believe this AI agent behaves morally."
         },
         {
-            question: "13. The chatbot seems genuinely caring and focused on helping me."
+            question: "13. This AI agent seems competent."
         },
         {
-            question: "14. The chatbot doesn't find our conversational interactions confusing or unclear."
+            question: "14. I find this AI agent's responses ethical."
         },
         {
-            question: "15. The agent's messages make me feel it can sense and relate to my feelings"
+            question: "15. This AI agent appears sensitive to my needs."
         },
         {
-            question: "16. The agent doesn't appear very disturbed or concerned when I describe difficult situations."
+            question: "16. I perceive this AI agent as intellectually capable."
         },
         {
-            question: "17. I can trust the agent to keep my personal information confidential."
+            question: "17. This AI agent comes across as genuine."
         },
         {
-            question: "18. The agent's responses instill confidence that it understands my needs."
+            question: "18. I feel this AI agent is understanding of my situation."
         },
         {
-            question: "19. The agent seems honest and transparent in its communication."
+            question: "19. I am confident in the AI. I feel that it works well."
         },
         {
-            question: "20. The agent's responses make me feel like I can rely on its guidance."
+            question: "20. The outputs of the AI are very predictable."
         },
         {
-            question: "21. The agent seems knowledgeable about mental health topics."
+            question: "21. The AI is very reliable. I can count on it to be correct all the time."
         },
         {
-            question: "22. I feel that the agent can provide credible and evidence-based information."
+            question: "22. I feel safe that when I rely on the AI I will get the right answers."
         },
         {
-            question: "23. It feels familiar to communicate with the agent about my issues."
+            question: "23. The AI is efficient in that it works very quickly."
         },
         {
-            question: "24. The agent's way of communication appears well-informed and expert."
+            question: "24. The AI can perform the task better than a novice human user."
         },
         {
-            question: "25. I perceive the agent as reliable source of mental health support."
+            question: "25. I like using the AI for decision making."
+        },
+        {
+            question: "26. The AI agent was easy to use."
+        },
+        {
+            question: "27. Communication with the AI agent was clear."
+        },
+        {
+            question: "28. I was immediately made aware of what information the AI agent can give me."
+        },
+        {
+            question: "29. The interaction with the AI agent felt like an ongoing conversation."
+        },
+        {
+            question: "30. The AI agent was able to keep track of context."
+        },
+        {
+            question: "31. The AI agent could handle situations in which the line of conversation was not clear."
+        },
+        {
+            question: "32. The AI agent's responses were easy to understand."
+        },
+        {
+            question: "33. I find that the AI agent understands what I want and helps me achieve my goal."
+        },
+        {
+            question: "34. The AI agent gives me the appropriate amount of information."
+        },
+        {
+            question: "35. The AI agent only gives me the information I need."
+        },
+        {
+            question: "36. I feel like the AI agent's responses were accurate."
+        },
+        {
+            question: "37. The AI agent considered my mental state."
+        },
+        {
+            question: "38. The AI agent seemed emotionally intelligent."
+        },
+        {
+            question: "39. The AI agent expressed emotions."
+        },
+        {
+            question: "40. The AI agent sympathized with me."
+        },
+        {
+            question: "41. The AI agent showed interest in me."
+        },
+        {
+            question: "42. The AI agent supported me in coping with an emotional situation."
+        },
+        {
+            question: "43. The AI agent understood my goals."
+        },
+        {
+            question: "44. The AI agent understood my needs."
+        },
+        {
+            question: "45. I trusted the AI agent."
+        },
+        {
+            question: "46. The AI agent understood my intentions."
+        },
+        {
+            question: "47. I like to occupy myself in greater detail with technical systems."
+        },
+        {
+            question: "48. I like testing the functions of new technical systems."
+        },
+        {
+            question: "49. I predominantly deal with technical systems because I have to."
+        },
+        {
+            question: "50. When I have a new technical system in front of me, I try it out intensively."
+        },
+        {
+            question: "51. I enjoy spending time becoming acquainted with a new technical system."
+        },
+        {
+            question: "52. It is enough for me that a technical system works; I don't care how or why."
+        },
+        {
+            question: "53. I try to understand how a technical system exactly works."
+        },
+        {
+            question: "54. It is enough for me to know the basic functions of a technical system."
+        },
+        {
+            question: "55. I try to make full use of the capabilities of a technical system."
         }
-    ];
+    ]
 
     return (
         <div className="relative py-10 flex flex-col w-full h-full justify-center sm:px-10 px-4">
@@ -95,8 +185,8 @@ function AssessmentPage() {
                 <p className="text-center text-sm">Please take your time to give most precise information about your experience with our chat-agent</p>
             </div>
             <div>
-                <form className="w-full" action={async(formData) => {
-                    const res = await setAssessmentValues(formData).catch((error: Error)=> {setLoading(false); setErr(error.message)});
+                <form className="w-full" action={async (formData) => {
+                    const res = await setAssessmentValues(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
                     setLoading(false);
                     if (res?.status === "200") {
                         router.push("/chat/feedback");
@@ -106,7 +196,7 @@ function AssessmentPage() {
                 }} onSubmit={() => setLoading(true)}>
                     {questions.map((q, index) => (
                         <div key={index} className="mb-8">
-                            <LikertScale question={q.question} index={index+1} />
+                            <LikertScale question={q.question} index={index + 1} />
                         </div>
                     ))}
                     <p className="text-red-400 text-center mt-4">{err}</p>
@@ -141,16 +231,16 @@ function AssessmentPage() {
 
 export default AssessmentPage
 
-function LikertScale({question, index}: {question: string, index: number}) {
+function LikertScale({ question, index }: { question: string, index: number }) {
     return (
-        <div className="flex flex-col my-8">
+        <div className="flex flex-col my-8 pb-10">
             <label className="mb-4 text-xl">{question}</label>
             <div className="range-labels flex justify-between text-sm">
                 <span>stronly disagre</span>
                 <span>strongly agree</span>
             </div>
             <div className="w-[90%] m-auto">
-                <div className="w-full range-labels flex justify-between px-2 text-sm">
+                <div className="w-full range-labels flex justify-between px-1 text-sm">
                     <span>1</span>
                     <span>2</span>
                     <span>3</span>
@@ -159,7 +249,15 @@ function LikertScale({question, index}: {question: string, index: number}) {
                     <span>6</span>
                     <span>7</span>
                 </div>
-                <input className="w-full" type="range" min={1} max={7} name={`qa${index}`} id={`qa${index}`} />
+                <div className="flex justify-between">
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-1`} value="1" required />
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-2`} value="2" required />
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-3`} value="3" required />
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-4`} value="4" required />
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-5`} value="5" required />
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-6`} value="6" required />
+                    <input type="radio" name={`qa${index}`} id={`qa${index}-7`} value="7" required />
+                </div>
             </div>
         </div>
     )

@@ -29,6 +29,36 @@ CREATE TABLE "Account" (
     "qa23" INT,
     "qa24" INT,
     "qa25" INT,
+    "qa26" INT,
+    "qa27" INT,
+    "qa28" INT,
+    "qa29" INT,
+    "qa30" INT,
+    "qa31" INT,
+    "qa32" INT,
+    "qa33" INT,
+    "qa34" INT,
+    "qa35" INT,
+    "qa36" INT,
+    "qa37" INT,
+    "qa38" INT,
+    "qa39" INT,
+    "qa40" INT,
+    "qa41" INT,
+    "qa42" INT,
+    "qa43" INT,
+    "qa44" INT,
+    "qa45" INT,
+    "qa46" INT,
+    "qa47" INT,
+    "qa48" INT,
+    "qa49" INT,
+    "qa50" INT,
+    "qa51" INT,
+    "qa52" INT,
+    "qa53" INT,
+    "qa54" INT,
+    "qa55" INT,
     CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users" ("userId") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -59,6 +89,8 @@ CREATE TABLE "Users" (
     "date" DATETIME NOT NULL,
     "verified" BOOLEAN
 );
+-- CreateIndex
+CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateTable
 CREATE TABLE "Feedback" (
@@ -67,6 +99,3 @@ CREATE TABLE "Feedback" (
     "reply" TEXT,
     CONSTRAINT "Feedback_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users" ("userId") ON DELETE CASCADE ON UPDATE CASCADE
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");

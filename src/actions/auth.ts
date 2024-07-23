@@ -7,14 +7,6 @@ import { revalidatePath } from "next/cache";
 import { v4 as uuid } from "uuid";
 import {compare, hash} from "bcrypt";
 
-
-interface User {
-    userId: string | null;
-    role: string | null;
-    name: string | null;
-    email: string | null;
-}
-
 const client = createClient({
     url: process.env.EDGE_DB_URL as string,
     authToken: process.env.EDGE_DB_TOKEN as string
@@ -30,7 +22,7 @@ export async function login(formData: FormData) {
     const passwordMatch = await compare(checkUser.password as string, data.rows[0]?.password as string).catch(e => { throw new Error(e.message) });
     if (passwordMatch) {
         // Create the session
-        const user = { userId: data.rows[0]?.userId || null, role: data.rows[0]?.role || null, name: data.rows[0]?.name || null, email: data.rows[0]?.email || null } as User;
+        const user = { userId: data.rows[0]?.userId || null, role: data.rows[0]?.role || null, name: data.rows[0]?.name || null, email: data.rows[0]?.email || null } as any;
         if (data.rows[0]?.verified === 'false') {
             await sendVerification(user?.email as string, user.name as string, user.userId as string);
             return {status: "101", message: "Please verify your email to continue"};
@@ -83,7 +75,7 @@ export async function verifyUser(formData: FormData) {
             return {status: "401", message: "Invalid verification code!"};
         } else {
             const update = await client.execute(`UPDATE Users SET verified = 'true' WHERE userId = '${userId}'`);
-            const user = { userId: data.rows[0]?.userId || null, role: data.rows[0]?.role || null, name: data.rows[0]?.name || null, email: data.rows[0]?.email || null } as User;
+            const user = { userId: data.rows[0]?.userId || null, role: data.rows[0]?.role || null, name: data.rows[0]?.name || null, email: data.rows[0]?.email || null } as any;
             const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
             const session = await encrypt({ user, expires });
             cookies().set("session", session, { expires, httpOnly: true });

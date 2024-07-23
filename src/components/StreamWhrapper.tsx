@@ -37,6 +37,7 @@ let statusDisplay: HTMLLabelElement;
 export default function StreamWhrapper() {
     const router = useRouter();
     const [streamingStatus, setStreamingStatus] = useState(false as boolean);
+    const [playing, setPlaying] = useState(false as boolean);
     const [newResponse, setNewResponse] = useState("" as string | undefined);
     const [user, setUser] = useState({} as User | null);
     const [loading, setLoading] = useState(false);
@@ -70,17 +71,16 @@ export default function StreamWhrapper() {
             .then((_) => {})
             .catch((e) => {});
         }
+        setPlaying(prev => !prev);
     }
 
     function onTrack(event: RTCTrackEvent) {
         if (!event.track) { return }
             timer.push(
                 setInterval(async () => {
-                    if (peerConnection === null) { return }
-                    else {
-                    const stats = await peerConnection.getStats(event.track).catch((error) =>{}) as any;
-                    stats.forEach((report: any) => {
-                        if (report.type === 'inbound-rtp' && report.kind === 'video') {
+                    const stats = await peerConnection?.getStats(event.track).catch((error) =>{}).then((result: any)=> {
+                    result?.forEach((report: any) => {
+                        if (report.type === 'inbound-rtp' && report.kind === 'video' || report.type === 'inbound-rtp' && report.mediaType === 'video') {
                             const changeInUpstream = streamingStatus !== report.bytesReceived > lastBytesReceived;
                             if (changeInUpstream) {
                                 playVideoElement(event.streams[0])
@@ -88,8 +88,8 @@ export default function StreamWhrapper() {
                             } else {videoElement.style.opacity = "0%";}
                                 lastBytesReceived = report.bytesReceived;
                         }
-                    });}
-                }, 1000))
+                    })})
+                }, 500))
         }
 
     async function handleDestroy() {
@@ -180,12 +180,12 @@ export default function StreamWhrapper() {
     }, [chatWindow]);
 
     useEffect(() => {
-        if (newResponse !== undefined) {
+            setLoading(false);
+            if (newResponse) {
             setChatWindow([...chatWindow, { ai: newResponse }]);
             setNewResponse(undefined);
-            setLoading(false);
         }
-    }, [streamingStatus]);
+    }, [playing]);
 
     useEffect(() => {
         if (start) {

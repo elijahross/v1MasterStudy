@@ -43,7 +43,7 @@ function FeedbackPage() {
         const formData = new FormData(e.target);
         const res = await postFeedback(formData);
         if (res?.status === "200") {
-            router.push('/chat/feedback/thankyou');
+            router.push('/chat/feedback/congrats');
         } else if (res?.status === "500") {
             setError("Sorry, we couldn't connect to the database. Please try again later.");
         }

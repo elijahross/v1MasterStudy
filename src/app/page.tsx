@@ -34,8 +34,8 @@ async function Home() {
                     </div>
                     <div className="flex flex-col items-center w-full sm:px-8 px-2 mb-20">
                         <h2 className="mb-4 text-xl font-bold">Participation Agreement</h2>
-                        <p>Participants automatically take part in a raffle with a cash prize of 100$. The winner will be notified by email on August 15th.
-                        <br/><br/>Participation in TheLivingRoom project requires a commitment to open and honest dialogue. The study calls for a conversation with a chat-agent lasting at least 10 minutes. After this interaction, participants must complete a short survey consisting of 25 questions to provide feedback crucial for the research.
+                        <p>Participants automatically take part in a raffle with a cash prize of 100$. The winner will be notified by email on September 15th.
+                        <br/><br/>Participation in TheLivingRoom project requires a commitment to open and honest dialogue. The study calls for a conversation with a chat-agent lasting at least 10 minutes. After this interaction, participants must complete a short survey consisting of ca.50 questions to provide feedback crucial for the research.
                         </p>
                     </div>
                 </div>
