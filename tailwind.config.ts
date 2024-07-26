@@ -10,6 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         dark: "rgb(45,45,45)",
+        zinc1: "rgb(235, 235, 235)",
+        zinc2: "rgb(161 161 170)"
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

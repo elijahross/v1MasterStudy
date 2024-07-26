@@ -80,7 +80,7 @@ function SettingsPage() {
                                 <div className='toggle-switch' />
                             </label>
                             <div className={`${shareHistory ? "" : "text-gray-400"} text-xs self-center ml-4`}>
-                                Chat history
+                                Demographic Information
                             </div>
                         </div>
                         <div id="contacts" className="mb-4 flex flex-row">
@@ -89,7 +89,7 @@ function SettingsPage() {
                                 <div className='toggle-switch' />
                             </label>
                             <div className={`${shareContact ? "" : "text-gray-400"} text-xs self-center ml-4`}>
-                                Contact information
+                                Questionnaire Responses
                             </div>
                         </div>
                     </div>

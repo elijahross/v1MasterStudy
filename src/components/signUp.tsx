@@ -76,10 +76,10 @@ function SignUp() {
                 <p className="text-red-500">{validationError}</p>
                 <div className="flex flex-row justify-between my-2">
                     <input type="checkbox" id="terms" name="terms_of_use" required={true}/>
-                    <label className='text-xs ml-2'>I agree with current <Link href="/terms" className='text-violet-800'>Term & Conditions</Link></label>
+                    <label className='text-xs ml-2'>I agree with current <Link href="/terms" className='text-violet-800'>Terms & Conditions</Link></label>
                 </div>
                 <div className="w-full flex justify-center mt-6">
-                    <button type="submit" className="border-2 btn" onClick={() => setLoading(true)}> {loading ? <Image src={loader} alt="loader-animatoin" width={20} height={20} /> : "Sign Up" } </button>
+                    <button type="submit" className="border-[1px] border-zinc2 btn" onClick={() => setLoading(true)}> {loading ? <Image src={loader} alt="loader-animatoin" width={20} height={20} /> : "Sign Up" } </button>
                 </div>
 
             </form>

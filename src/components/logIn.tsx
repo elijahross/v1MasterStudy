@@ -76,7 +76,7 @@ function LogIn() {
                 </div>
                 {!validationError ? <p></p> : <p className="text-red-500 text-xs"> {validationError}</p>}
                 <div className="w-full flex justify-center mt-4">
-                    <button type="submit" className="border-2 btn" onClick={() => setLoading(true)}>{loading ? <Image src={loader} alt="loader-animation" width={20} height={20}/> : <>Login</>}</button>
+                    <button type="submit" className="border-[1px] border-zinc2 btn" onClick={() => setLoading(true)}>{loading ? <Image src={loader} alt="loader-animation" width={20} height={20}/> : <>Login</>}</button>
                 </div>
             </form>
         </div>

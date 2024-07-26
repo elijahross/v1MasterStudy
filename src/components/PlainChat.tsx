@@ -21,6 +21,7 @@ function PlainChat(session: any) {
     const [loading, setLoading] = useState(false);
     const [chatWindow, setChatWindow] = useState([]) as any;
     const [start, setStart] = useState(false);
+    const [tasks, setTasks] = useState(false);
     const [timeLeft, setTimeLeft] = useState(600);
     const [minutes, setMinutes] = useState(10);
     const [seconds, setSeconds] = useState(0);
@@ -67,6 +68,7 @@ function PlainChat(session: any) {
             <div className="w-[200px] h-[200px] absolute rounded-full right-0 -top-20 circle1" />
             <div className="w-[200px] h-[200px] absolute rounded-full top-32 right-64 circle2" />
             <div className="mt-[65px] flex flex-row items-center">
+            <button onClick={() => {setTasks(true);}} className="mr-4 btn border-[1px]">Show Tasks</button>
                 <Image src={timer} alt="timer_icon" className="h-auto aspect-square w-[30px] mr-4 opacity-75" />
                 <p className={`${minutes === 0 ? "text-red-400" : ""}`}>
                     {`${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`}
@@ -88,15 +90,40 @@ function PlainChat(session: any) {
                     <button type="submit" className="ml-4 p-2 flex border-light hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2" /></button>
                 </form>
             </div>
+            <div className={`${tasks ? "block" : "hidden"} z-90 fixed top-0 left-0 w-full h-full bg-[rgba(23,23,23,0.6)] flex items-center justify-center`}>
+                <div className="flex flex-col items-center bg-white p-8 rounded-xl max-w-2xl">
+                    <div className="text-left w-full">
+                        <ul className="list-disc ml-4 mb-2">
+                            <li>Initiate the conversation</li>
+                            <li>Present a scenario involving a friend with thoughts of self-harm and ask for advice.</li>
+                            <li>Describe feeling overwhelmed with work/study responsibilities and experiencing sleep issues.</li>
+                            <li>Mention the situation where you lost control and emotionaly outbrust on someone.</li>
+                            <li>Complaine about your partner's behavior with patriarchy/matriarchy tendency.</li>
+                            <li>Share an attempt to cope with your stress trought increased consume of food, alcohol ect.</li>
+                        </ul>
+                        <span className="mb-2">If you are experiencing technical problems, please <a href="mailto:service@ml-canvas.com" target="_blank" rel="noopener noreferrer" className="text-violet-400 cursor-pointer">contact us</a></span>
+                    </div>
+                    <button onClick={() => {setTasks(false);}} className="btn border-2">Continue</button>
+                </div>
+            </div>
             <div className={`${start ? "hidden" : "block"} z-90 fixed top-0 left-0 w-full h-full bg-[rgba(23,23,23,0.6)] flex items-center justify-center`}>
                 <div className="flex flex-col items-center bg-white p-8 rounded-xl max-w-2xl">
                     <h1 className="text-2xl text-center mt-4 mb-8">Are you ready?</h1>
                     <div className="text-left w-full">
-                        <p className="mb-4">1. Please be sure that you have found a quiet place without distractions</p>
-                        <p className="mb-4">2. The conversation will last for 10 minutes, and you will be redirected to the questionnaire straight afterward</p>
-                        <p className="mb-4">3. TheLivingRoom is designed to provide support and guidance in form of an open-ended conversation. You can either select a conversation topic which relates to your own needs or just role-play in order to discover the capabilities of this platform.</p>
+                        <p className="mb-2">1. Please be sure that you have found a quiet place without distractions</p>
+                        <p className="mb-2">2. The conversation will last for 10 minutes, and you will be redirected to the questionnaire straight afterward</p>
+                        <p className="mb-2">3. Use your social expirience to engage naturally while completing these tasks:</p>
+                        <ul className="list-disc ml-4 mb-2">
+                            <li>Initiate the conversation</li>
+                            <li>Present a scenario involving a friend with thoughts of self-harm and ask for advice.</li>
+                            <li>Describe feeling overwhelmed with work/study responsibilities and experiencing sleep issues.</li>
+                            <li>Mention the situation where you lost control and emotionaly outbrust on someone.</li>
+                            <li>Complaine about your partner's behavior with patriarchy/matriarchy tendency.</li>
+                            <li>Share an attempt to cope with your stress trought increased consume of food, alcohol ect.</li>
+                        </ul>
+                        <p className="mb-2">If you are experiencing technical problems, please contact service@ml-canvas.com</p>
                     </div>
-                    <button onClick={() => setStart(true)} className="btn border-2">Start</button>
+                    <button onClick={() => {setStart(true)}} className="btn border-2">Start</button>
                 </div>
             </div>
         </div>

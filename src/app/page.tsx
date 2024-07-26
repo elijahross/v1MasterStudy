@@ -28,15 +28,15 @@ async function Home() {
                 <div className="flex md:flex-row flex-col justify-between w-full">
                     <div className="w-full flex flex-col items-center sm:px-8 px-2 mb-20">
                         <h2 className="mb-4 text-xl font-bold">About this project</h2>
-                        <p>This is a research project for graduation thesis. The main goals is to evaluate the capabiliites of ai-based support systems.
+                        <p>This is a research project for a graduation thesis. The main goal is to evaluate the capabilities of AI-based support systems.
                             <br/><br/> TheLivingRoom is an innovative mental health chat-agent that provides a natural conversation to help users reflect on their day-to-day experiences. Designed with empathy and understanding, TheLivingRoom creates a safe and non-judgmental space for individuals to share their thoughts, emotions, and personal stories.
                         </p>
                     </div>
                     <div className="flex flex-col items-center w-full sm:px-8 px-2 mb-20">
                         <h2 className="mb-4 text-xl font-bold">Participation Agreement</h2>
-                        <p>Participants automatically take part in a raffle with a cash prize of 100$. The winner will be notified by email on September 15th.
-                        <br/><br/>Participation in TheLivingRoom project requires a commitment to open and honest dialogue. The study calls for a conversation with a chat-agent lasting at least 10 minutes. After this interaction, participants must complete a short survey consisting of ca.50 questions to provide feedback crucial for the research.
-                        </p>
+                        <span>By participating in our study, you agree to be bound by our <Link href="/terms" className='text-violet-800'>Terms & Conditions</Link>.
+                            <br/><br/>Participation in the TheLivingRoom project requires a commitment to open and honest dialogue. The study calls for a conversation with a chat-agent lasting at least 10 minutes. After this interaction, participants must complete a short survey consisting of approximately 50 questions to provide feedback crucial for the research.
+                        </span>
                     </div>
                 </div>
                 <Footer />

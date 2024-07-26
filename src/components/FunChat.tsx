@@ -18,7 +18,7 @@ function FunChat(session:any) {
     const scrolRef = useRef() as any;
     const inputRef = useRef() as any;
     useEffect(() => {
-        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Thank you ${res?.user?.name || ""}, for taking the time to provide your valuable feedback. Your input will greatly help us improve.` }]) });
+        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Thank you ${res?.user?.name || ""}, for your valuable contribution to our research endeavor. This study has focused on examining participants' cognitive and emotional responses to various visual stimuli presented through diverse interface modalities. Our investigation aimed to elucidate the nuanced interactions between user perception and interface design elements. Should you wish to be informed of the study's findings, please direct your inquiry to our research team at service@ml-canvas.com.` }]) });
     }, []);
 
     useEffect(() => {
