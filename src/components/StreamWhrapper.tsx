@@ -36,6 +36,7 @@ let statusDisplay: HTMLLabelElement;
 
 export default function StreamWhrapper() {
     const router = useRouter();
+    const [connectionSt, setConnectionSt] = useState('none' as string | undefined);
     const [streamingStatus, setStreamingStatus] = useState(false as boolean);
     const [playing, setPlaying] = useState(false as boolean);
     const [newResponse, setNewResponse] = useState("" as string | undefined);
@@ -110,7 +111,7 @@ export default function StreamWhrapper() {
         pc.close();
         pc.removeEventListener('icecandidate', (ev) => onIceCandidate, true);
         pc.removeEventListener('iceconnectionstatechange', () => console.log("ok"), true);
-        pc.removeEventListener('connectionstatechange', () => { if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; setStreamingStatus(false); } else { statusDisplay.innerText = "🔴 offline" } })
+        pc.removeEventListener('connectionstatechange', () => { setConnectionSt(peerConnection?.connectionState); if (peerConnection?.connectionState === "connecting") { statusDisplay.innerText = "🟡 connecting" } else if (peerConnection?.connectionState === "connected") { statusDisplay.innerText = "🟢 online"; setStreamingStatus(false); } else { statusDisplay.innerText = "🔴 offline" } })
         pc.removeEventListener('track', (ev: RTCTrackEvent) => onTrack(ev), true);
         if (pc === peerConnection) {
             peerConnection = null;
@@ -156,7 +157,7 @@ export default function StreamWhrapper() {
 
     useEffect(() => {
         const newConnection = async () => {
-            await handleConnect().catch((error) => { closePC(); handleDestroy(); });
+            await handleConnect().catch((error) => { handleDestroy(); });
         };
         statusDisplay = document.getElementById("status-display") as HTMLLabelElement;
         videoElement = document.getElementById('video-element') as HTMLVideoElement;
@@ -206,6 +207,17 @@ export default function StreamWhrapper() {
         }
         return () => { for (let i = 0; i < timerArr.length; i++) { clearInterval(timerArr[i]) } };
     }, [start, seconds]);
+
+
+    useEffect(() => {
+        if (peerConnection?.connectionState === 'disconnected') {
+        const newConnection = async () => {
+            await handleConnect().catch((error) => { handleDestroy(); });
+        };
+        timer.push(setTimeout(() => {
+            newConnection();
+        }, 2000))}
+    }, [connectionSt]);
 
     async function submitForm(formData: any) {
         const results = await askAi(formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { ai: "Error:" + error }] }) }) as string;
