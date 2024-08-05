@@ -24,7 +24,7 @@ function SettingsPage() {
     useEffect(() => {
         const getSettings = async () => {
             const res = await getOptions().catch((error) => setErr(error.message));
-                setContact(res.followup === "true");
+                setContact(res.followup === "false");
                 setShareData(res.information === "true");
                 setShareHistory(res.history === "true");
                 setShareContact(res.contacts === "true");

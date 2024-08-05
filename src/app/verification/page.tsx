@@ -103,7 +103,16 @@ function VerificationPage() {
                                     <option value={2}>Male</option>
                                     <option value={3}>Non-Binary</option>
                                 </select>
-                                <label>Country:</label>
+                                <label>Completed Education:</label>
+                                <select className="mb-4 rounded-md" name="education" id="education" required={true}>
+                                    <option value={0}>No education</option>
+                                    <option value={1}>High Scool</option>
+                                    <option value={2}>Apprenticeship or vocational training</option>
+                                    <option value={3}>Bachelor Degree</option>
+                                    <option value={4}>Master Degree</option>
+                                    <option value={5}>PhD or Doctor Title</option>
+                                </select>
+                                <label>Country of birth:</label>
                                 <select className="mb-8 rounded-md" name="country" id="country" required={true}>
                                     <option value="United States">United States</option>
                                     <option value="Afghanistan">Afghanistan</option>

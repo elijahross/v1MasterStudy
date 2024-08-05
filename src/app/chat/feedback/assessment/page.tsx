@@ -200,7 +200,7 @@ function AssessmentPage() {
                         </div>
                     ))}
                     <p className="text-red-400 text-center mt-4">{err}</p>
-                    <button className="btn border-2 w-fit m-auto mt-8 flex justify-self-center">{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Save & Quit"}</button>
+                    <button className="btn border-2 w-fit m-auto mt-8 flex justify-self-center">{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Submit"}</button>
                 </form>
             </div>
             <div className={`${start ? "hidden" : "block"} md:pl-[400px] sm:py-0 py-10 pl-[0px] z-90 fixed top-0 left-0 w-full h-full bg-[rgba(23,23,23,0.6)] flex items-center justify-center`}>

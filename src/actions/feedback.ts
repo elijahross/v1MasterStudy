@@ -34,6 +34,7 @@ export async function updateInformation(formData: FormData) {
     const age = formData.get("age");
     const gender = formData.get("gender");
     const country = formData.get("country");
+    const educ = formData.get("education");
     const userId = formData.get("userId");
     try{
     const verify = await client.execute(`SELECT * FROM Account WHERE userId = '${userId}'`);
@@ -41,7 +42,7 @@ export async function updateInformation(formData: FormData) {
     const update = await client.execute(`UPDATE Account SET sex = ${gender}, age = '${age}', country = ${country} WHERE userId = '${userId}'`);
     return {status: "200", message: "Information updated successfully."}
     } else {
-    const data = await client.execute(`INSERT INTO Account (sex, age, country, userId) VALUES ('${gender}', '${age}', '${country}','${userId}')`);
+    const data = await client.execute(`INSERT INTO Account (sex, age, education, country, userId) VALUES ('${gender}', '${age}', '${educ}', '${country}','${userId}')`);
     return {status: "200", message: "Information updated successfully."}
     }} catch (e: any) {return {status: "500", message: "Could not connect to the database. Please try again later."}}
 }

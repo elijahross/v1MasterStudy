@@ -3,6 +3,7 @@ CREATE TABLE "Account" (
     "userId" TEXT NOT NULL PRIMARY KEY,
     "sex" INT NOT NULL,
     "age" INT NOT NULL,
+    "education" TEXt,
     "country" TEXT,
     "qa1" INT,
     "qa2" INT,
