@@ -216,9 +216,9 @@ export default function StreamWhrapper() {
     return (
         <div className="relative flex w-full h-screen min-h-[600px] flex-col items-center justify-between py-4">
             <div className="relative w-full xs:h-[30%] h-[100%] my-4 flex items-center m-auto mb-20">
-                <div className="absolute md:top-[65px] top-[100%] flex flex-row items-center max-w-md">
-                <button onClick={() => {setTasks(true);}} className="mr-4 btn border-[1px]">Show Tasks</button>
-                    <Image src={timerImage} alt="timer_icon" className="h-auto aspect-square w-[30px] mr-4 opacity-75" />
+                <div className="absolute md:top-[65px] top-[100%] flex sm:flex-row flex-col  items-center max-w-md">
+                    <button onClick={() => {setTasks(true);}} className="sm:mr-4 sm:my-0 my-4 btn border-[1px]">Show Tasks</button>
+                    <Image src={timerImage} alt="timer_icon" className="h-auto aspect-square w-[30px] sm:mr-4 opacity-75" />
                     <p className={`${minutes === 0 ? "text-red-400" : ""}`}>
                         {`${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`}
                     </p>
