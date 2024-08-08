@@ -1,16 +1,17 @@
 "use client"
-import { setAssessmentValues } from "@/actions/assessment";
-import { useState } from "react";
+import { setAssessmentValues1, setAssessmentValues2, setAssessmentValues3, setAssessmentValues4, setAssessmentValues5, setAssessmentValues6 } from "@/actions/assessment";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import loader from "../../../../../public/loader.svg";
 
 function AssessmentPage() {
     const router = useRouter();
+    const [page, setPage] = useState(0);
     const [err, setErr] = useState("" as string);
     const [start, setStart] = useState(false);
     const [loading, setLoading] = useState(false);
-    const questions = [
+    const questions1 = [
         {
             question: "1. I find this AI agent intelligent."
         },
@@ -40,7 +41,8 @@ function AssessmentPage() {
         },
         {
             question: "10. I perceive this AI agent as honorable."
-        },
+        }];
+    const questions2 = [
         {
             question: "11. This AI agent appears well-informed."
         },
@@ -70,138 +72,266 @@ function AssessmentPage() {
         },
         {
             question: "20. The outputs of the AI are very predictable."
-        },
-        {
-            question: "21. The AI is very reliable. I can count on it to be correct all the time."
-        },
-        {
-            question: "22. I feel safe that when I rely on the AI I will get the right answers."
-        },
-        {
-            question: "23. The AI is efficient in that it works very quickly."
-        },
-        {
-            question: "24. The AI can perform the task better than a novice human user."
-        },
-        {
-            question: "25. I like using the AI for decision making."
-        },
-        {
-            question: "26. The AI agent was easy to use."
-        },
-        {
-            question: "27. Communication with the AI agent was clear."
-        },
-        {
-            question: "28. I was immediately made aware of what information the AI agent can give me."
-        },
-        {
-            question: "29. The interaction with the AI agent felt like an ongoing conversation."
-        },
-        {
-            question: "30. The AI agent was able to keep track of context."
-        },
-        {
-            question: "31. The AI agent could handle situations in which the line of conversation was not clear."
-        },
-        {
-            question: "32. The AI agent's responses were easy to understand."
-        },
-        {
-            question: "33. I find that the AI agent understands what I want and helps me achieve my goal."
-        },
-        {
-            question: "34. The AI agent gives me the appropriate amount of information."
-        },
-        {
-            question: "35. The AI agent only gives me the information I need."
-        },
-        {
-            question: "36. I feel like the AI agent's responses were accurate."
-        },
-        {
-            question: "37. The AI agent considered my mental state."
-        },
-        {
-            question: "38. The AI agent seemed emotionally intelligent."
-        },
-        {
-            question: "39. The AI agent expressed emotions."
-        },
-        {
-            question: "40. The AI agent sympathized with me."
-        },
-        {
-            question: "41. The AI agent showed interest in me."
-        },
-        {
-            question: "42. The AI agent supported me in coping with an emotional situation."
-        },
-        {
-            question: "43. The AI agent understood my goals."
-        },
-        {
-            question: "44. The AI agent understood my needs."
-        },
-        {
-            question: "45. I trusted the AI agent."
-        },
-        {
-            question: "46. The AI agent understood my intentions."
-        },
-        {
-            question: "47. I like to occupy myself in greater detail with technical systems."
-        },
-        {
-            question: "48. I like testing the functions of new technical systems."
-        },
-        {
-            question: "49. I predominantly deal with technical systems because I have to."
-        },
-        {
-            question: "50. When I have a new technical system in front of me, I try it out intensively."
-        },
-        {
-            question: "51. I enjoy spending time becoming acquainted with a new technical system."
-        },
-        {
-            question: "52. It is enough for me that a technical system works; I don't care how or why."
-        },
-        {
-            question: "53. I try to understand how a technical system exactly works."
-        },
-        {
-            question: "54. It is enough for me to know the basic functions of a technical system."
-        },
-        {
-            question: "55. I try to make full use of the capabilities of a technical system."
-        }
-    ]
+        }];
+    const questions3 = [{
+        question: "21. The AI is very reliable. I can count on it to be correct all the time."
+    },
+    {
+        question: "22. I feel safe that when I rely on the AI I will get the right answers."
+    },
+    {
+        question: "23. The AI is efficient in that it works very quickly."
+    },
+    {
+        question: "24. The AI can perform the task better than a novice human user."
+    },
+    {
+        question: "25. I like using the AI for decision making."
+    },
+    {
+        question: "26. The AI agent was easy to use."
+    },
+    {
+        question: "27. Communication with the AI agent was clear."
+    },
+    {
+        question: "28. I was immediately made aware of what information the AI agent can give me."
+    },
+    {
+        question: "29. The interaction with the AI agent felt like an ongoing conversation."
+    },
+    {
+        question: "30. The AI agent was able to keep track of context."
+    }];
+    const questions4 = [{
+        question: "31. The AI agent could handle situations in which the line of conversation was not clear."
+    },
+    {
+        question: "32. The AI agent's responses were easy to understand."
+    },
+    {
+        question: "33. I find that the AI agent understands what I want and helps me achieve my goal."
+    },
+    {
+        question: "34. The AI agent gives me the appropriate amount of information."
+    },
+    {
+        question: "35. The AI agent only gives me the information I need."
+    },
+    {
+        question: "36. I feel like the AI agent's responses were accurate."
+    },
+    {
+        question: "37. The AI agent considered my mental state."
+    },
+    {
+        question: "38. The AI agent seemed emotionally intelligent."
+    },
+    {
+        question: "39. The AI agent expressed emotions."
+    },
+    {
+        question: "40. The AI agent sympathized with me."
+    }];
+    const questions5 = [{
+        question: "41. The AI agent showed interest in me."
+    },
+    {
+        question: "42. The AI agent supported me in coping with an emotional situation."
+    },
+    {
+        question: "43. The AI agent understood my goals."
+    },
+    {
+        question: "44. The AI agent understood my needs."
+    },
+    {
+        question: "45. I trusted the AI agent."
+    },
+    {
+        question: "46. The AI agent understood my intentions."
+    },
+    {
+        question: "47. I like to occupy myself in greater detail with technical systems."
+    },
+    {
+        question: "48. I like testing the functions of new technical systems."
+    },
+    {
+        question: "49. I predominantly deal with technical systems because I have to."
+    },
+    {
+        question: "50. When I have a new technical system in front of me, I try it out intensively."
+    },];
+    const questions6 = [{
+        question: "51. I enjoy spending time becoming acquainted with a new technical system."
+    },
+    {
+        question: "52. It is enough for me that a technical system works; I don't care how or why."
+    },
+    {
+        question: "53. I try to understand how a technical system exactly works."
+    },
+    {
+        question: "54. It is enough for me to know the basic functions of a technical system."
+    },
+    {
+        question: "55. I try to make full use of the capabilities of a technical system."
+    }];
 
     return (
         <div className="relative py-10 flex flex-col w-full h-full justify-center sm:px-10 px-4">
             <div className="w-full sm:mb-20 mb-10">
                 <h1 className="text-center text-2xl font-bold mb-4">Final Evaluation</h1>
-                <p className="text-center text-sm">Please take your time to give most precise information about your experience with our chat-agent</p>
+                <p className="text-center text-sm">All questions must be answered. Please take your time to give most precise information about your experience with our chat-agent</p>
             </div>
-            <div>
-                <form className="w-full" action={async (formData) => {
-                    const res = await setAssessmentValues(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
+            <div className="px-10">
+                    <div className="progress-bar__container w-full mx-20">
+                        <div className="progress-bar__progress w-[20%]"></div>
+                    </div>
+                <form className={`${page == 0 ? "fade-in" : "hidden"} w-full`} action={async (formData) => {
+                    const res = await setAssessmentValues1(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
                     setLoading(false);
                     if (res?.status === "200") {
-                        router.push("/chat/feedback");
+                        setPage(page + 1); 
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // For smooth scrolling
+                        });
                     } else if (res?.status === "500") {
                         setErr(res.message);
                     }
                 }} onSubmit={() => setLoading(true)}>
-                    {questions.map((q, index) => (
-                        <div key={index} className="mb-8">
-                            <LikertScale question={q.question} index={index + 1} />
-                        </div>
-                    ))}
+                        {questions1.map((q, index) => (
+                            <div key={q.question } className={`mb-8`}>
+                                <LikertScale question={q.question} index={index + 1} />
+                            </div>
+                        ))}
                     <p className="text-red-400 text-center mt-4">{err}</p>
-                    <button className="btn border-2 w-fit m-auto mt-8 flex justify-self-center">{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Submit"}</button>
+                    <div className="flex flex-row">
+                        <button className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`}>{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Next"}</button>
+                    </div>
                 </form>
+                <form className={`${page == 1 ? "fade-in" : "hidden"} w-full`} action={async (formData) => {
+                    const res = await setAssessmentValues2(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
+                    setLoading(false);
+                    if (res?.status === "200") {
+                        setPage(page + 1); 
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // For smooth scrolling
+                        });
+                    } else if (res?.status === "500") {
+                        setErr(res.message);
+                    }
+                }} onSubmit={() => setLoading(true)}>
+                        {questions2.map((q, index) => (
+                            <div key={q.question } className={`mb-8`}>
+                                <LikertScale question={q.question} index={index + 11} />
+                            </div>
+                        ))}
+                <p className="text-red-400 text-center mt-4">{err}</p>
+                    <div className="flex flex-row">
+                        <div className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick={() => {setPage(page - 1)}}>Previous</div>
+                        <button className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`}>{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Next"}</button>
+                    </div>
+                </form>
+                <form className={`${page == 2 ? "fade-in" : "hidden"} w-full`} action={async (formData) => {
+                    const res = await setAssessmentValues3(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
+                    setLoading(false);
+                    if (res?.status === "200") {
+                        setPage(page + 1); 
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // For smooth scrolling
+                        });
+                    } else if (res?.status === "500") {
+                        setErr(res.message);
+                    }
+                }} onSubmit={() => setLoading(true)}>
+                        {questions3.map((q, index) => (
+                            <div key={q.question } className={`mb-8`}>
+                                <LikertScale question={q.question} index={index + 21} />
+                            </div>
+                        ))}
+                    <p className="text-red-400 text-center mt-4">{err}</p>
+                    <div className="flex flex-row">
+                        <div className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick={() => {setPage(page - 1)}}>Previous</div>
+                        <button className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`}>{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Next"}</button>
+                    </div>
+                </form>
+                <form className={`${page == 3 ? "fade-in" : "hidden"} w-full`} action={async (formData) => {
+                    const res = await setAssessmentValues4(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
+                    setLoading(false);
+                    if (res?.status === "200") {
+                        setPage(page + 1); 
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // For smooth scrolling
+                        });
+                    } else if (res?.status === "500") {
+                        setErr(res.message);
+                    }
+                }} onSubmit={() => setLoading(true)}>
+                        {questions4.map((q, index) => (
+                            <div key={q.question } className={`mb-8`}>
+                                <LikertScale question={q.question} index={index + 31} />
+                            </div>
+                        ))}
+                    <p className="text-red-400 text-center mt-4">{err}</p>
+                    <div className="flex flex-row">
+                        <div className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick={() => {setPage(page - 1)}}>Previous</div>
+                        <button className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`}>{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Next"}</button>
+                    </div>
+                </form>
+                <form className={`${page == 4 ? "fade-in" : "hidden"} w-full`} action={async (formData) => {
+                    const res = await setAssessmentValues5(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
+                    setLoading(false);
+                    if (res?.status === "200") {
+                        setPage(page + 1); 
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // For smooth scrolling
+                        });
+                    } else if (res?.status === "500") {
+                        setErr(res.message);
+                    }
+                }} onSubmit={() => setLoading(true)}>
+                        {questions5.map((q, index) => (
+                            <div key={q.question } className={`mb-8`}>
+                                <LikertScale question={q.question} index={index + 41} />
+                            </div>
+                        ))}
+                    <p className="text-red-400 text-center mt-4">{err}</p>
+                    <div className="flex flex-row">
+                        <div className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick={() => {setPage(page - 1)}}>Previous</div>
+                        <button className={`flex btn border-2 w-fit m-auto mt-4 justify-self-center`}>{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Next"}</button>
+                    </div>
+                </form>
+                    <form className={`${page == 5 || page == 9 ? "fade-in" : "hidden"} w-full`} action={async (formData) => {
+                        const res = await setAssessmentValues6(formData).catch((error: Error) => { setLoading(false); setErr(error.message) });
+                        setLoading(false);
+                        if (res?.status === "200") {
+                            router.push("/chat/feedback");
+                        } else if (res?.status === "500") {
+                            setErr(res.message);
+                        }
+                    }} onSubmit={() => setLoading(true)}>
+                        {questions6.map((q, index) => (
+                            <div key={q.question } className={`mb-8`}>
+                                <LikertScale question={q.question} index={index + 51} />
+                            </div>
+                        ))}
+                        <p className="text-red-400 text-center mt-4">{err}</p>
+                        <div className="flex flex-row">
+                            <div className={`${page == 9 || page == 0 ? "hidden" : "flex"} btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick={() => {setPage(page - 1)}}>Previous</div>
+                            <div className={`${page == 5 || page == 9 ? "hidden" : "flex"} btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick={() => {setPage(page + 1); window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth' // For smooth scrolling
+                            });}}>Next</div>
+                            <button className={`${page == 5 || page == 9 ? "flex" : "hidden"} btn border-2 w-fit m-auto mt-4 justify-self-center`} onClick ={() => {setPage(9)}}>{loading ? <Image src={loader} alt="loader_icon" width={20} height={20} /> : "Submit"}</button>
+                        </div>
+                    </form>
             </div>
             <div className={`${start ? "hidden" : "block"} md:pl-[400px] sm:py-0 py-10 pl-[0px] z-90 fixed top-0 left-0 w-full h-full bg-[rgba(23,23,23,0.6)] flex items-center justify-center`}>
                 <div className="flex flex-col bg-white p-8 rounded-xl sm:max-w-[80%] max-w-screen max-h-screen overflow-auto">
