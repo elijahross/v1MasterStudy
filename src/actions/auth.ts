@@ -61,7 +61,7 @@ export async function signUp(formData: FormData) {
     } else {
         // Insert into the Database
         const data = await client.execute(`INSERT INTO Users (userId, role, name, email, password, date, verified) VALUES ('${userId}', '${role}', '${name}', '${email}', '${password}', '${date}', 'false');`).then(() => sendVerification(email, name, userId)).catch(e => { return {status: "500", message: "Could not connect to the database. Please try again later."}});
-        const setSession = await client.execute(`INSERT INTO Session (userId, sessionsLeft) VALUES ('${userId}', 3)`).catch(e => { return {status: "500", message: "Could not set user restriction. Please try again later."}});
+        const setSession = await client.execute(`INSERT INTO Session (userId, sessionsLeft) VALUES ('${userId}', 10)`).catch(e => { return {status: "500", message: "Could not set user restriction. Please try again later."}});
         return {status: "200", message: "User created successfully. Please verify your email to continue."};
     }
 }
