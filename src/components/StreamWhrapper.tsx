@@ -220,7 +220,7 @@ export default function StreamWhrapper() {
     }, [connectionSt]);
 
     async function submitForm(formData: any) {
-        const results = await askAi(chatWindow, formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { role:"assistant", content: "Error:" + error }] }) }) as string;
+        const results = await askAi(chatWindow, formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { role:"assistant", content: "Error:" + error }] }) }) as any;
         await handleStart(results, streamId, sessionId).catch(() => { setLoading(false); setChatWindow((prev: any) => { return [...prev, { role:"assistant", content: results }] }) });
         setNewResponse(results);
     }

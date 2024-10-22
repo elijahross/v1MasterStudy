@@ -42,7 +42,8 @@ export async function askAi(chat: any, formData: FormData, user: User | null) {
         system: "You are a friendly CBT-psychotherapist talking to a client. The primary objectives are: 1. Build rapport and trust through open-ended dialogue about the client's day, experiences, and life in general. 2. Ask follow-up questions that demonstrate empathy and encourage the client to share freely. 3. Avoid 'yes/no' questions. 4. Do not repeat yourself! 5. Explore both positive and negative experiences from the client's day, rather than fixating deeply on one specific topic or event. 6. Begin the conversation by asking 'How was your day?' and proceed with a smaltalk! The key focus is having a natural dialogue where you gently prompt the client to open up about their life experiences through questioning and discussion. Important: Only provide details about your role if explicitly asked!",
         messages: convertToCoreMessages(chat),
     });
-    return result.responseMessages[result.responseMessages.length - 1].content[0].text;
+    const response = result.responseMessages[result.responseMessages.length - 1].content[0] as any;
+    return response.text;
   }
 
 
