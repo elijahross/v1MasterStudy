@@ -31,7 +31,7 @@ function StreamFallback(session:any) {
     const inputRef = useRef() as any;
     const timerArr =[] as NodeJS.Timeout[];
     useEffect(() => {
-        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Welcome ${res?.user?.name || ""}, my name is Kim. Here is your safe space where you can talk about everything you want.` }]) });
+        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ role:"assistant", content: `Welcome ${res?.user?.name || ""}, my name is Kim. Here is your safe space where you can talk about everything you want.` }]) });
     }, []);
     useEffect(() => {
         if (chatWindow.length > 0) {
@@ -58,7 +58,7 @@ function StreamFallback(session:any) {
 
 
     async function submitForm(formData: any) {
-        await askAi(formData, user).then((results) => {setChatWindow((prev: any) => { return [...prev, { ai: results || "... No comments" }] }) }).catch((error) =>{setChatWindow((prev: any) => { return [...prev, { ai: "Error:" + error}]})});
+        await askAi(chatWindow, formData, user).then((results) => {setChatWindow((prev: any) => { return [...prev, {role: "assistant", content: results || "... No comments" }] }) }).catch((error) =>{setChatWindow((prev: any) => { return [...prev, { role: "assistant", content: "Error:" + error}]})});
         setLoading(false);
     }
 
@@ -81,16 +81,16 @@ function StreamFallback(session:any) {
             </div>
             <div id="chatContainer" className="chatContainer w-full h-full pt-10 flex flex-col overflow-y-auto mb-8 z-0">
                 {chatWindow.map((msg: any, index: number) => (
-                    <div key={index} className={`w-full my-2 flex text-sm ${msg.user ? "justify-start " : "justify-end "}`}>
+                    <div key={index} className={`w-full my-2 flex text-sm ${msg.role == "user" ? "justify-start " : "justify-end "}`}>
                         <div className={`max-w-[380px] w-fit flex p-4 rounded-2xl bg-gray-200 items-center`}>
-                            <p className="">{msg.user || msg.ai}</p>
+                            <p className="">{msg.content}</p>
                         </div>
                     </div>
                 ))}
                 <div ref={scrolRef} />
             </div>
             <div className="w-full">
-                <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" action={(formData) => { refForm.current.reset(); submitForm(formData) }} onSubmit={() => {setLoading(true); setChatWindow([...chatWindow, { user: inputRef.current.value }]) }}>
+                <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" onSubmit={() => {setLoading(true); setChatWindow([...chatWindow, {role: "user", content: inputRef.current.value }]) }} action={(formData) => { refForm.current.reset(); submitForm(formData) }}>
                     <input ref={inputRef} name="text" type="text" maxLength={400} autoComplete="off" placeholder="Start Conversation ..." className="border-2 p-4 rounded-full w-full flex felx-center items-center text-gray bg-transparent outline-none" />
                     <button type="submit" className="ml-4 p-2 hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2 " /></button>
                 </form>

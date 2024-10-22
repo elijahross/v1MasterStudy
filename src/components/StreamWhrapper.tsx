@@ -163,7 +163,7 @@ export default function StreamWhrapper() {
         videoElement = document.getElementById('video-element') as HTMLVideoElement;
         idleVideoElement = document.getElementById('idle-video-element') as HTMLVideoElement;
         videoElement.style.opacity = "0%"
-        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Welcome ${res?.user?.name || ""}, my name is Kim. Here is your safe space where you can talk about everything you want.` }]) });
+        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ role:"assistant", content: `Welcome ${res?.user?.name || ""}, my name is Kim. Here is your safe space where you can talk about everything you want.` }]) });
 
         timer.push(setTimeout(() => {
             newConnection();
@@ -220,8 +220,8 @@ export default function StreamWhrapper() {
     }, [connectionSt]);
 
     async function submitForm(formData: any) {
-        const results = await askAi(formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { ai: "Error:" + error }] }) }) as string;
-        await handleStart(results, streamId, sessionId).catch(() => { setLoading(false); setChatWindow((prev: any) => { return [...prev, { ai: results }] }) });
+        const results = await askAi(chatWindow, formData, user).catch((error) => { setChatWindow((prev: any) => { return [...prev, { role:"assistant", content: "Error:" + error }] }) }) as string;
+        await handleStart(results, streamId, sessionId).catch(() => { setLoading(false); setChatWindow((prev: any) => { return [...prev, { role:"assistant", content: results }] }) });
         setNewResponse(results);
     }
 
@@ -247,16 +247,16 @@ export default function StreamWhrapper() {
             </div>
             <div id="chatContainer" className="chatContainer max-h-[600px] h-full w-full flex flex-col overflow-y-auto mb-8 py-8">
                 {chatWindow.map((msg: any, index: number) => (
-                    <div key={index} className={`w-full my-2 flex text-sm ${msg.user ? "justify-start " : "justify-end "}`}>
+                    <div key={index} className={`w-full my-2 flex text-sm ${msg.role == "user" ? "justify-start " : "justify-end "}`}>
                         <div className={`max-w-[380px] w-fit flex p-4 rounded-2xl bg-gray-200 items-center`}>
-                            <p className="">{msg.user || msg.ai}</p>
+                            <p className="">{msg.content}</p>
                         </div>
                     </div>
                 ))}
                 <div ref={scrolRef} />
             </div>
             <div className="w-full flex flex-row">
-                <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" action={(formData) => { submitForm(formData); refForm.current.reset() }} onSubmit={() => { setLoading(true); setChatWindow([...chatWindow, { user: inputRef.current.value }]) }}>
+                <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" onSubmit={() => { setLoading(true); setChatWindow([...chatWindow, { role: "user", content: inputRef.current.value }]) }} action={(formData) => { submitForm(formData); refForm.current.reset() }}>
                     <input ref={inputRef} name="text" type="text" maxLength={400} autoComplete="off" placeholder="Start Conversation ..." className="border-2 border-light p-4 rounded-full w-full flex felx-center items-center text-gray bg-transparent outline-none" />
                     <button type="submit" className="ml-4 p-2 border-light hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2" /></button>
                 </form>

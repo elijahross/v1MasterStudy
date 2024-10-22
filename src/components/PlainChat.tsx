@@ -31,7 +31,7 @@ function PlainChat(session: any) {
     const timerArr = [] as NodeJS.Timeout[];
 
     useEffect(() => {
-        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Welcome ${res?.user?.name || ""}. Here is your safe space where you can talk about everything you want.` }]) });
+        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ role: "assistant", content: `Welcome ${res?.user?.name || ""}. Here is your safe space where you can talk about everything you want.` }]) });
     }, []);
     useEffect(() => {
         if (chatWindow.length > 0) {
@@ -59,7 +59,7 @@ function PlainChat(session: any) {
 
 
     async function submitForm(formData: any) {
-        await askAi(formData, user).then((results) => { setChatWindow((prev: any) => { return [...prev, { ai: results || "... No comments" }] }) }).catch((error) => { setChatWindow((prev: any) => { return [...prev, { ai: "Error:" + error }] }) });
+        await askAi(chatWindow, formData, user).then((results) => { setChatWindow((prev: any) => { return [...prev, { role: "assistant", content: results || "... No comments" }] }) }).catch((error) => { setChatWindow((prev: any) => { return [...prev, { role: "assistant", content: "Error:" + error }] }) });
         setLoading(false);
     }
 
@@ -67,25 +67,25 @@ function PlainChat(session: any) {
         <div className="relative flex w-full h-screen flex-col items-center justify-between py-4 pt-20">
             <div className="w-[200px] h-[200px] absolute rounded-full right-0 -top-20 circle1" />
             <div className="w-[200px] h-[200px] absolute rounded-full top-32 right-64 circle2" />
-            <div className="mt-[65px] flex flex-row items-center">
-            <button onClick={() => {setTasks(true);}} className="mr-4 btn border-[1px]">Show Tasks</button>
-                <Image src={timer} alt="timer_icon" className="h-auto aspect-square w-[30px] mr-4 opacity-75" />
-                <p className={`${minutes === 0 ? "text-red-400" : ""}`}>
-                    {`${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`}
-                </p>
+            <div className="mt-[65px] flex flex-row items-start w-full justify-start">
+                <button onClick={() => {setTasks(true);}} className="mr-4 btn border-[1px]">Show Tasks</button>
+                    <Image src={timer} alt="timer_icon" className="h-auto aspect-square w-[30px] mr-4 opacity-75" />
+                    <p className={`${minutes === 0 ? "text-red-400" : ""}`}>
+                        {`${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`}
+                    </p>
             </div>
             <div id="chatContainer" className="chatContainer w-full h-full flex flex-col overflow-y-auto mb-8 pt-2">
                 {chatWindow.map((msg: any, index: number) => (
-                    <div key={index} className={`w-full my-8 flex text-sm ${msg.user ? "justify-start " : "justify-end "}`}>
+                    <div key={index} className={`w-full my-8 flex text-sm ${msg.role == "user" ? "justify-start " : "justify-end "}`}>
                         <div className={`max-w-[380px] w-fit flex p-4 rounded-2xl bg-gray-200 items-center`}>
-                            <p className="">{msg.user || msg.ai}</p>
+                            <p className="">{msg.content}</p>
                         </div>
                     </div>
                 ))}
                 <div ref={scrolRef} />
             </div>
             <div className="w-full flex flex-row">
-                <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" action={(formData) => { refForm.current.reset(); submitForm(formData) }} onSubmit={() => { setLoading(true); setChatWindow([...chatWindow, { user: inputRef.current.value }]) }}>
+                <form id="form" ref={refForm} className="w-full flex flex-row items-center justify-center" onSubmit={() => { setLoading(true); setChatWindow([...chatWindow, { role: "user", content: inputRef.current.value }]) }} action={(formData) => { refForm.current.reset(); submitForm(formData) }}>
                     <input ref={inputRef} name="text" type="text" maxLength={400} autoComplete="off" placeholder="Start Conversation ..." className="border-2 border-light p-4 rounded-full w-full flex felx-center items-center text-gray bg-transparent outline-none" />
                     <button type="submit" className="ml-4 p-2 flex border-light hover:bg-green-300 transition-all duration-1000 active:scale-90 rounded-full border-2"><Image src={loading ? loader : send} alt="icon_send" className="h-auto aspect-square w-[50px] opacity-75 p-2" /></button>
                 </form>
