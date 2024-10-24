@@ -184,7 +184,7 @@ export default function StreamWhrapper() {
     useEffect(() => {
             setLoading(false);
             if (newResponse) {
-            setChatWindow([...chatWindow, { ai: newResponse }]);
+            setChatWindow([...chatWindow, { role: "assistant", content: newResponse }]);
             setNewResponse(undefined);
         }
     }, [playing]);

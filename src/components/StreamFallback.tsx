@@ -60,7 +60,7 @@ function StreamFallback(session:any) {
     async function submitForm(formData: any) {
         await askAi(chatWindow, formData, user).then((results) => {setChatWindow((prev: any) => { return [...prev, {role: "assistant", content: results || "... No comments" }] }) }).catch((error) =>{setChatWindow((prev: any) => { return [...prev, { role: "assistant", content: "Error:" + error}]})});
         setLoading(false);
-    }
+    } 
 
     return (
         <div className="relative flex w-full h-screen flex-col items-center justify-between py-4">
