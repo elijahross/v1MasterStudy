@@ -18,7 +18,7 @@ function FunChat(session:any) {
     const scrolRef = useRef() as any;
     const inputRef = useRef() as any;
     useEffect(() => {
-        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Thank you ${res?.user?.name || ""}, for your valuable contribution to our research endeavor. This study has focused on examining participants' cognitive and emotional responses to various stimuli presented through diverse interface modalities. In particular we've investigated potential correlations between perceived trust/credibility and different interface design elements. Should you wish to be informed of the study's findings, please direct your inquiry to our research team at service@ml-canvas.com.` }]) });
+        getSession().then((res: any) => { setUser(res?.user); setChatWindow([{ ai: `Thank you ${res?.user?.name || ""}, for your valuable contribution to our research endeavor. This study has focused on examining participants' cognitive and emotional responses to various stimuli presented through diverse interface modalities. In particular we've investigated potential correlations between perceived trust/credibility and different interface design elements. Should you wish to be informed of the study's findings or get the prolific accreditation, please direct your inquiry to our research team at service@ml-canvas.com.` }]) });
     }, []);
 
     useEffect(() => {
